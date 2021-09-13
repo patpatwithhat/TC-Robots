@@ -14,6 +14,7 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.ScanMode;
 import com.example.tc_robots.R;
+import com.example.tc_robots.backend.Article;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,12 +43,11 @@ public class ScannerScreen extends AppCompatActivity implements EasyPermissions.
     private void updateUiAfterScan() {
         viewModel.getArticles().observe(this, articles -> {
             TextView scanCounterView = findViewById(R.id.scanCounter);
-            String articleNames ="";
-            articles.stream()
-                    .map(article -> article.getName())
-                    .collect(Collectors.toList())
-                        ;
-            scanCounterView.setText(String.valueOf(articleNames));
+            StringBuilder articleNames = new StringBuilder();
+            for (Article article : articles) {
+                articleNames.append(article.getName()).append(", ");
+            }
+            scanCounterView.setText(articleNames.toString());
         });
         viewModel.isScannerBlocked().observe(this, isScannerBlocked -> {
             if (isScannerBlocked) {
@@ -65,14 +65,14 @@ public class ScannerScreen extends AppCompatActivity implements EasyPermissions.
         }
         scanner.setAutoFocusEnabled(true);
         scanner.setScanMode(ScanMode.CONTINUOUS);
-        scanner.setDecodeCallback(result -> runOnUiThread(this::doOnScan));
+        scanner.setDecodeCallback(result -> runOnUiThread(() -> doOnScan(result.getText())));
         scannerView.setOnClickListener(view ->
                 scanner.startPreview());
     }
 
-    private void doOnScan() {
-        viewModel.incrementScanCounter();
+    private void doOnScan(String result) {
         viewModel.refreshScanner();
+        viewModel.addArticle(result);
 
     }
 

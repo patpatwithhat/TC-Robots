@@ -1,22 +1,20 @@
 package com.example.tc_robots.ui;
 
 import android.os.CountDownTimer;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.tc_robots.backend.Article;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ScannerScreenViewModel extends ViewModel {
 
     private static final String TAG = "ScannerScreenViewModel";
-    private final MutableLiveData<List<Article>> articles = new MutableLiveData<>();
+    private MutableLiveData<List<Article>> articles =new MutableLiveData<>();
     private final MutableLiveData<Boolean> isScannerBlocked = new MutableLiveData<>();
 
     //TODO add disposables https://www.youtube.com/watch?v=Th0bab1muPU&list=PLgCYzUzKIBE-8wE9Sv3yzYZlo70PBmFPz&index=4
@@ -30,7 +28,17 @@ public class ScannerScreenViewModel extends ViewModel {
     }
 
     public void addArticle(String name) {
-        articles.getValue().add(new Article(name));
+        Article newArticle = new Article(name);
+        if(articles.getValue() != null){
+            List<Article> list = articles.getValue();
+            list.add(newArticle);
+            articles.setValue(list);
+        }else {
+            List<Article> list = new ArrayList<>();
+            list.add(newArticle);
+            articles.setValue(list);
+        }
+
     }
 
     private void blockScanner() {
