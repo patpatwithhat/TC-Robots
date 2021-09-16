@@ -21,12 +21,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        dataBinding true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-}
 
+}
 
 dependencies {
 
@@ -41,4 +45,6 @@ dependencies {
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.github.1902shubh:SendMail:1.0.0'
 }

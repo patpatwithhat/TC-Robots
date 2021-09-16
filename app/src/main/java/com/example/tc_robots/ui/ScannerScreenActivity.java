@@ -3,7 +3,8 @@ package com.example.tc_robots.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,53 +14,45 @@ import androidx.lifecycle.ViewModelProvider;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.ScanMode;
-import com.example.tc_robots.R;
-import com.example.tc_robots.backend.Article;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class ScannerScreen extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+import com.example.tc_robots.backend.Article;
+import com.example.tc_robots.databinding.ActivityMainBinding;
+import com.example.tc_robots.uihelpers.CustomListAdapter;
+
+public class ScannerScreenActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
     private static final int CAMERA_REQUEST_CODE = 1000;
 
     private CodeScanner scanner;
     private ScannerScreenViewModel viewModel;
+    private ListAdapter adapter;
+
+    ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        setContentView(binding.getRoot());
         viewModel = new ViewModelProvider(this).get(ScannerScreenViewModel.class);
         checkForCameraPermission();
-        updateUiAfterScan();
+        initUiElements();
     }
 
-    private void updateUiAfterScan() {
-        viewModel.getArticles().observe(this, articles -> {
-            TextView scanCounterView = findViewById(R.id.scanCounter);
-            StringBuilder articleNames = new StringBuilder();
-            for (Article article : articles) {
-                articleNames.append(article.getName()).append(", ");
-            }
-            scanCounterView.setText(articleNames.toString());
-        });
-        viewModel.isScannerBlocked().observe(this, isScannerBlocked -> {
-            if (isScannerBlocked) {
-                scanner.stopPreview();
-            } else {
-                scanner.startPreview();
-            }
-        });
-    }
 
     private void initCodeScanner() {
-        CodeScannerView scannerView = findViewById(R.id.scanner_view);
+        CodeScannerView scannerView = binding.scannerView;
         if (scanner == null) {
             scanner = new CodeScanner(this, scannerView);
         }
@@ -70,10 +63,43 @@ public class ScannerScreen extends AppCompatActivity implements EasyPermissions.
                 scanner.startPreview());
     }
 
+    private void initUiElements() {
+        binding.btnContinueorder.setOnClickListener(this);
+        //ToDo ApiCall get available articles
+        viewModel.fetchArticlesInStock();
+
+
+        viewModel.getOrderedArticles().observe(this, articles -> {
+            if (adapter == null) {
+                adapter = new CustomListAdapter(ScannerScreenActivity.this, articles);
+            }
+            binding.listview.setAdapter(adapter);
+        });
+
+        viewModel.isScannerBlocked().observe(this, isScannerBlocked -> {
+            if (isScannerBlocked) {
+                scanner.stopPreview();
+            } else {
+                scanner.startPreview();
+            }
+        });
+    }
+
     private void doOnScan(String result) {
         viewModel.refreshScanner();
+        //ToDo check if article is in available articles
+        // else Toast unknown article
         viewModel.addArticle(result);
+    }
 
+    @Override
+    public void onClick(View view) {
+        goToNextActivity();
+    }
+
+    private void goToNextActivity() {
+        Intent i = new Intent(ScannerScreenActivity.this,OrderScreenActivity.class);
+        startActivity(i);
     }
 
     @AfterPermissionGranted(CAMERA_REQUEST_CODE)
@@ -127,6 +153,5 @@ public class ScannerScreen extends AppCompatActivity implements EasyPermissions.
             scanner.releaseResources();
         }
     }
-
 
 }

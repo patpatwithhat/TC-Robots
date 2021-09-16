@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_main.xml" value="0.1287037037037037" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_orderscreen.xml" value="0.264" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_statusscreen.xml" value="0.4041666666666667" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/codescanner.xml" value="0.1287037037037037" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/list_view_element.xml" value="0.4041666666666667" />
       </map>
     </option>
   </component>
