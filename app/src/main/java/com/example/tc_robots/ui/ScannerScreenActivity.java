@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +16,6 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.ScanMode;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +23,6 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import com.example.tc_robots.backend.Article;
 import com.example.tc_robots.databinding.ActivityMainBinding;
 import com.example.tc_robots.uihelpers.CustomListAdapter;
 
@@ -83,13 +82,17 @@ public class ScannerScreenActivity extends AppCompatActivity implements EasyPerm
                 scanner.startPreview();
             }
         });
+        viewModel.getErrorCode().observe(this, errorCode -> {
+            Toast.makeText(this, "Error occurred: " + errorCode, Toast.LENGTH_LONG).show();
+        });
     }
 
     private void doOnScan(String result) {
         viewModel.refreshScanner();
         //ToDo check if article is in available articles
         // else Toast unknown article
-        viewModel.addArticle(result);
+        viewModel.addIfInStockArticle(result);
+        viewModel.checkForErrorCode(result);
     }
 
     @Override

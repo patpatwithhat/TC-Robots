@@ -17,6 +17,7 @@ public class ScannerScreenViewModel extends ViewModel {
 
     private static final String TAG = "ScannerScreenViewModel";
     private final MutableLiveData<List<Article>> orderedArticles = new MutableLiveData<>();
+    private final MutableLiveData<String> errorCode = new MutableLiveData<>();
     private final List<Article> articlesInStock = new ArrayList<>();
     private final MutableLiveData<Boolean> isScannerBlocked = new MutableLiveData<>();
 
@@ -30,14 +31,22 @@ public class ScannerScreenViewModel extends ViewModel {
         return orderedArticles;
     }
 
+    public LiveData<String> getErrorCode() {
+        return errorCode;
+    }
+
     public List<Article> getArticlesInStock() {
         return articlesInStock;
     }
 
-    public void addArticle(String name) {
+    public void addIfInStockArticle(String name) {
         Article articleToSearchFor = new Article(name);
-        if(!isArticleInStock(articleToSearchFor)) return;
+        if (!isArticleInStock(articleToSearchFor)) return;
         Article articleInStock = getArticleFromStock(articleToSearchFor);
+        addArticle(articleInStock);
+    }
+
+    private void addArticle(Article articleInStock) {
         if (orderedArticles.getValue() == null) {
             List<Article> list = new ArrayList<>();
             list.add(articleInStock);
@@ -54,7 +63,7 @@ public class ScannerScreenViewModel extends ViewModel {
     }
 
     private Article getArticleFromStock(Article articleToSearchFor) {
-        return articlesInStock.get( articlesInStock.indexOf(articleToSearchFor));
+        return articlesInStock.get(articlesInStock.indexOf(articleToSearchFor));
     }
 
     private boolean isDuplicateArticle(Article article) {
@@ -65,6 +74,12 @@ public class ScannerScreenViewModel extends ViewModel {
     public void fetchArticlesInStock() {
         DataDummy data = new DataDummy();
         articlesInStock.addAll(data.getArticles());
+    }
+
+    public void checkForErrorCode(String result) {
+        if (result.matches("\\d+(?:\\.\\d+)?")) {
+            errorCode.setValue(result);
+        }
     }
 
     private void blockScanner() {
@@ -94,4 +109,6 @@ public class ScannerScreenViewModel extends ViewModel {
     public LiveData<Boolean> isScannerBlocked() {
         return isScannerBlocked;
     }
+
+
 }

@@ -10,15 +10,25 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dip"
-            android:contentDescription="TODO" />
+            android:contentDescription="TODO"
+            android:layout_weight="0.30"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="0.70">
+
+            <TextView
+                android:id="@+id/firstLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Example object"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/secondLine"
@@ -28,14 +38,6 @@
                 android:maxLines="1"
                 android:text="Description"
                 android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/firstLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="Example object"
-                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>
