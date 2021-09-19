@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/monitoringScreenFragment">
+
+    <fragment
+        android:id="@+id/scannerScreenFragment"
+        android:name="com.example.tc_robots.ui.ScannerScreenFragment"
+        android:label="ScannerScreenFragment" />
+    <fragment
+        android:id="@+id/monitoringScreenFragment"
+        android:name="com.example.tc_robots.ui.MonitoringScreenFragment"
+        android:label="MonitoringScreenFragment" />
+</navigation>
