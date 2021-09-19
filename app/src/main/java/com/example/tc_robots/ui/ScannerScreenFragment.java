@@ -1,32 +1,33 @@
 package com.example.tc_robots.ui;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.ScanMode;
+import com.example.tc_robots.R;
+import com.example.tc_robots.databinding.FragmentCodeScannerBinding;
+import com.example.tc_robots.uihelpers.CustomListAdapter;
 
 import java.util.List;
-import java.util.Objects;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import com.example.tc_robots.databinding.ActivityMainBinding;
-import com.example.tc_robots.uihelpers.CustomListAdapter;
-
-public class ScannerScreenActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
+public class ScannerScreenFragment extends Fragment implements EasyPermissions.PermissionCallbacks, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
     private static final int CAMERA_REQUEST_CODE = 1000;
@@ -35,15 +36,23 @@ public class ScannerScreenActivity extends AppCompatActivity implements EasyPerm
     private ScannerScreenViewModel viewModel;
     private ListAdapter adapter;
 
-    ActivityMainBinding binding;
+    FragmentCodeScannerBinding binding;
 
+    public ScannerScreenFragment() {
+        super(R.layout.fragment_code_scanner);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_code_scanner, container, false);
+        return binding.getRoot();
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        setContentView(binding.getRoot());
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(ScannerScreenViewModel.class);
         checkForCameraPermission();
         initUiElements();
@@ -53,11 +62,11 @@ public class ScannerScreenActivity extends AppCompatActivity implements EasyPerm
     private void initCodeScanner() {
         CodeScannerView scannerView = binding.scannerView;
         if (scanner == null) {
-            scanner = new CodeScanner(this, scannerView);
+            scanner = new CodeScanner(requireContext(), scannerView);
         }
         scanner.setAutoFocusEnabled(true);
         scanner.setScanMode(ScanMode.CONTINUOUS);
-        scanner.setDecodeCallback(result -> runOnUiThread(() -> doOnScan(result.getText())));
+        scanner.setDecodeCallback(result -> requireActivity().runOnUiThread(() -> doOnScan(result.getText())));
         scannerView.setOnClickListener(view ->
                 scanner.startPreview());
     }
@@ -68,22 +77,22 @@ public class ScannerScreenActivity extends AppCompatActivity implements EasyPerm
         viewModel.fetchArticlesInStock();
 
 
-        viewModel.getOrderedArticles().observe(this, articles -> {
+        viewModel.getOrderedArticles().observe(getViewLifecycleOwner(), articles -> {
             if (adapter == null) {
-                adapter = new CustomListAdapter(ScannerScreenActivity.this, articles);
+                adapter = new CustomListAdapter(ScannerScreenFragment.this.requireContext(), articles);
             }
             binding.listview.setAdapter(adapter);
         });
 
-        viewModel.isScannerBlocked().observe(this, isScannerBlocked -> {
+        viewModel.isScannerBlocked().observe(getViewLifecycleOwner(), isScannerBlocked -> {
             if (isScannerBlocked) {
                 scanner.stopPreview();
             } else {
                 scanner.startPreview();
             }
         });
-        viewModel.getErrorCode().observe(this, errorCode -> {
-            Toast.makeText(this, "Error occurred: " + errorCode, Toast.LENGTH_LONG).show();
+        viewModel.getErrorCode().observe(getViewLifecycleOwner(), errorCode -> {
+            Toast.makeText(requireContext(), "Error occurred: " + errorCode, Toast.LENGTH_LONG).show();
         });
     }
 
@@ -101,14 +110,25 @@ public class ScannerScreenActivity extends AppCompatActivity implements EasyPerm
     }
 
     private void goToNextActivity() {
-        Intent i = new Intent(ScannerScreenActivity.this,OrderScreenActivity.class);
-        startActivity(i);
+        //  Intent i = new Intent(ScannerScreenFragment.this,OrderScreenActivity.class);
+        // startActivity(i);
+/*        Fragment fragment = new FragmentB();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out,  // exit
+                        R.anim.fade_in,   // popEnter
+                        R.anim.slide_out  // popExit
+                )
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();*/
     }
 
     @AfterPermissionGranted(CAMERA_REQUEST_CODE)
     private void checkForCameraPermission() {
         String[] permission = {Manifest.permission.CAMERA};
-        if (!EasyPermissions.hasPermissions(this, permission)) {
+        if (!EasyPermissions.hasPermissions(requireContext(), permission)) {
             EasyPermissions.requestPermissions(this, "We need permissions to scan your barcodes!", CAMERA_REQUEST_CODE, permission);
         } else {
             initCodeScanner();
@@ -133,16 +153,9 @@ public class ScannerScreenActivity extends AppCompatActivity implements EasyPerm
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            checkForCameraPermission();
-        }
-    }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (scanner != null) {
             scanner.startPreview();
@@ -150,7 +163,7 @@ public class ScannerScreenActivity extends AppCompatActivity implements EasyPerm
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         if (scanner != null) {
             scanner.releaseResources();

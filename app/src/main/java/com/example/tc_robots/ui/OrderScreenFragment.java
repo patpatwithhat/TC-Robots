@@ -2,36 +2,49 @@ package com.example.tc_robots.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import com.example.tc_robots.R;
 import com.example.tc_robots.backend.Customer;
-import com.example.tc_robots.backend.InputValidation;
-import com.example.tc_robots.databinding.ActivityOrderscreenBinding;
+import com.example.tc_robots.databinding.FragmentOrderscreenBinding;
 
 import java.util.Locale;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
-public class OrderScreenActivity extends AppCompatActivity implements View.OnClickListener {
+public class OrderScreenFragment extends Fragment implements View.OnClickListener {
 
-    ActivityOrderscreenBinding binding;
+    FragmentOrderscreenBinding binding;
     OrderScreenViewModel viewModel;
 
+    public OrderScreenFragment() {
+        super(R.layout.fragment_orderscreen);
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityOrderscreenBinding.inflate(getLayoutInflater());
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        setContentView(binding.getRoot());
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_orderscreen, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(OrderScreenViewModel.class);
         initUiElements();
     }
+
 
     private void initUiElements() {
         binding.btnOrdernow.setOnClickListener(this);
@@ -52,9 +65,9 @@ public class OrderScreenActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void goToNextActivity(Customer customer) {
-        Intent i = new Intent(OrderScreenActivity.this,StatusScreenActivity.class);
-        i.putExtra("customer", customer);
-        startActivity(i);
+       // Intent i = new Intent(OrderScreenFragment.this, StatusScreenFragment.class);
+       // i.putExtra("customer", customer);
+       // startActivity(i);
     }
 
 }

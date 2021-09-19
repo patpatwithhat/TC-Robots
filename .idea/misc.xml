@@ -7,7 +7,10 @@
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_orderscreen.xml" value="0.264" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_statusscreen.xml" value="0.4041666666666667" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/codescanner.xml" value="0.1287037037037037" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/fragment_code_scanner.xml" value="0.140625" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/fragment_monitoringscreen.xml" value="0.23072916666666668" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/list_view_element.xml" value="0.4041666666666667" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/menu/bottom_menu.xml" value="0.23072916666666668" />
       </map>
     </option>
   </component>
