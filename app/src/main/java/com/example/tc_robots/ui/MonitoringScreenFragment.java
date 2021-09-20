@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tc_robots.R;
+import com.example.tc_robots.backend.TCPClient;
 import com.example.tc_robots.databinding.FragmentMonitoringscreenBinding;
 import com.example.tc_robots.uihelpers.CustomListAdapterAlerts;
 import com.example.tc_robots.uihelpers.CustomListAdapterArticles;
@@ -50,6 +51,7 @@ public class MonitoringScreenFragment extends Fragment {
             binding.listviewAlerts.setAdapter(adapter);
         });
     }
+
 
 
 }
