@@ -19,7 +19,7 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.ScanMode;
 import com.example.tc_robots.R;
 import com.example.tc_robots.databinding.FragmentCodeScannerBinding;
-import com.example.tc_robots.uihelpers.CustomListAdapter;
+import com.example.tc_robots.uihelpers.CustomListAdapterArticles;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class ScannerScreenFragment extends Fragment implements EasyPermissions.P
 
         viewModel.getOrderedArticles().observe(getViewLifecycleOwner(), articles -> {
             if (adapter == null) {
-                adapter = new CustomListAdapter(ScannerScreenFragment.this.requireContext(), articles);
+                adapter = new CustomListAdapterArticles(ScannerScreenFragment.this.requireContext(), articles);
             }
             binding.listview.setAdapter(adapter);
         });

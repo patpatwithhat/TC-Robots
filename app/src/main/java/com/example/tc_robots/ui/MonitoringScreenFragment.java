@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,11 +14,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tc_robots.R;
 import com.example.tc_robots.databinding.FragmentMonitoringscreenBinding;
+import com.example.tc_robots.uihelpers.CustomListAdapterAlerts;
+import com.example.tc_robots.uihelpers.CustomListAdapterArticles;
 
 public class MonitoringScreenFragment extends Fragment {
-    FragmentMonitoringscreenBinding binding;
+    private FragmentMonitoringscreenBinding binding;
 
-    MonitoringScreenViewModel viewModel;
+    private MonitoringScreenViewModel viewModel;
+    private ListAdapter adapter;
 
     public MonitoringScreenFragment() {
         super(R.layout.fragment_monitoringscreen);
@@ -26,7 +30,7 @@ public class MonitoringScreenFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentMonitoringscreenBinding binding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_monitoringscreen, container, false);
         return binding.getRoot();
     }
@@ -39,6 +43,12 @@ public class MonitoringScreenFragment extends Fragment {
     }
 
     private void initUiElements() {
+        viewModel.getAlertList().observe(getViewLifecycleOwner(), alerts -> {
+            if (adapter == null) {
+                adapter = new CustomListAdapterAlerts(MonitoringScreenFragment.this.requireContext(), alerts);
+            }
+            binding.listviewAlerts.setAdapter(adapter);
+        });
     }
 
 

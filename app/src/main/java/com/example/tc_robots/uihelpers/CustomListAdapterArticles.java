@@ -17,8 +17,8 @@ import com.example.tc_robots.backend.Article;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomListAdapter extends ArrayAdapter<Article> {
-    public CustomListAdapter(@NonNull Context context, List<Article> articleList) {
+public class CustomListAdapterArticles extends ArrayAdapter<Article> {
+    public CustomListAdapterArticles(@NonNull Context context, List<Article> articleList) {
         super(context, R.layout.list_view_element,articleList);
     }
 
