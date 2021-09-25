@@ -1,7 +1,10 @@
 package com.example.tc_robots.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -20,7 +23,8 @@ import com.example.tc_robots.uihelpers.CustomListAdapterArticles;
 
 public class MonitoringScreenFragment extends Fragment {
     private FragmentMonitoringscreenBinding binding;
-
+    private static final String TAG = "MonitoringScreenFragment";
+    
     private MonitoringScreenViewModel viewModel;
     private ListAdapter adapter;
 
@@ -50,8 +54,8 @@ public class MonitoringScreenFragment extends Fragment {
             }
             binding.listviewAlerts.setAdapter(adapter);
         });
-    }
 
+    }
 
 
 }

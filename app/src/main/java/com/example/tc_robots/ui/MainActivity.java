@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         navControllerInit();
-        new ConnectTask().execute("");
+        //new ConnectTask().execute("");
     }
 
     /**
@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         switch (id) {
             //check id
             case R.id.monitoringScreenFragment:
-                Toast.makeText(this,"heress", Toast.LENGTH_LONG).show();
                 NavOptions navOptions = new NavOptions.Builder()
                         .setPopUpTo(R.id.my_nav, true)
                         .build();
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 break;
             case R.id.scannerScreenFragment:
                 Navigation.findNavController(this, R.id.fragmentContainerView).navigate(R.id.scannerScreenFragment);
-                Toast.makeText(this,"here", Toast.LENGTH_LONG).show();
                 break;
         }
         item.setChecked(true);
