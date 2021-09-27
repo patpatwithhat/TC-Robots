@@ -3,13 +3,23 @@ package com.example.tc_robots.backend;
 import java.util.Date;
 
 public class Alert {
+    ErrorType errorType;
     String errorCode, errorText; //maybe extra error class containing both
     CustomDate date;
 
-    public Alert(String errorCode, String errorText, CustomDate date) {
+    public Alert(ErrorType errorType, String errorCode, String errorText, CustomDate date) {
+        this.errorType = errorType;
         this.errorCode = errorCode;
         this.errorText = errorText;
         this.date = date;
+    }
+
+    public ErrorType getErrorType() {
+        return errorType;
+    }
+
+    public void setErrorType(ErrorType errorType) {
+        this.errorType = errorType;
     }
 
     public String getErrorCode() {

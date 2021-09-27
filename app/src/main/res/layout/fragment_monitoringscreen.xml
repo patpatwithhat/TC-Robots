@@ -3,25 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-  <LinearLayout
-      android:layout_height="wrap_content"
-      android:layout_width="match_parent"
-      android:orientation="vertical">
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:gravity="center_horizontal"
-          android:text="Current Robot messages"/>
-      <ListView
-          android:id="@+id/listview_alerts"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_marginTop="20dp"
-          android:divider="#00000000"
-          android:dividerHeight="8dp"
-          app:layout_constraintTop_toBottomOf="@+id/scanner_view"
-          tools:layout_editor_absoluteX="0dp"
-          tools:listitem="@layout/list_view_element_alert" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-  </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Current Robot messages" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_show_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_menu_btn"
+                
+                android:text="all" />
+
+            <Button
+                android:id="@+id/btn_filter_errors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="errors" />
+            <Button
+                android:id="@+id/btn_filter_warnings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Warnings" />
+            <Button
+                android:id="@+id/btn_filter_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Infos" />
+        </LinearLayout>
+        <ListView
+            android:id="@+id/listview_alerts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:divider="#00000000"
+            android:dividerHeight="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/scanner_view"
+            tools:layout_editor_absoluteX="0dp"
+            tools:listitem="@layout/list_view_element_alert" />
+
+    </LinearLayout>
 </layout>
