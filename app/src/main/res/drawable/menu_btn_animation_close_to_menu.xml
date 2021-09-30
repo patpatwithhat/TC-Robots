@@ -1,0 +1,64 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="49dp"
+            android:height="49dp"
+            android:viewportWidth="49"
+            android:viewportHeight="49">
+            <path
+                android:name="path"
+                android:pathData="M 4.95 4.95 L 44.95 44.95"
+                android:strokeColor="#fff"
+                android:strokeWidth="7"
+                android:strokeLineCap="round"/>
+            <path
+                android:name="path_1"
+                android:pathData="M 44.95 4.95 L 4.95 44.95"
+                android:strokeColor="#fff"
+                android:strokeWidth="7"
+                android:strokeLineCap="round"/>
+            <path
+                android:name="path_2"
+                android:pathData="M 44.95 4.95 L 4.95 44.95"
+                android:strokeColor="#fff"
+                android:strokeWidth="7"
+                android:strokeLineCap="round"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:duration="600"
+                android:valueFrom="M 4.95 4.95 L 44.95 44.95"
+                android:valueTo="M 3.649 3.649 L 45.351 3.649"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/overshoot_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="path_1">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:duration="600"
+                android:valueFrom="M 44.95 4.95 L 4.95 44.95"
+                android:valueTo="M 10.43 24.5 L 38.909 24.5"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/overshoot_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="path_2">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:duration="600"
+                android:valueFrom="M 44.95 4.95 L 4.95 44.95"
+                android:valueTo="M 17.21 45.351 L 31.79 45.351"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/overshoot_interpolator"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

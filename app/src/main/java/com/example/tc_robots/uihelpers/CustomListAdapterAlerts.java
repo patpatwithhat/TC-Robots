@@ -1,6 +1,7 @@
 package com.example.tc_robots.uihelpers;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,10 +16,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.tc_robots.R;
 import com.example.tc_robots.backend.Alert;
 import com.example.tc_robots.backend.Article;
+import com.example.tc_robots.backend.ErrorType;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
@@ -44,11 +49,13 @@ public class CustomListAdapterAlerts extends ArrayAdapter<Alert> {
         TextView errorTitle = convertView.findViewById(R.id.errorTitle);
         TextView errorText = convertView.findViewById(R.id.errorText);
         TextView date = convertView.findViewById(R.id.date);
+        ImageView imageView = convertView.findViewById(R.id.icon);
         MaterialButton button = convertView.findViewById(R.id.btn_close_alert);
 
         errorTitle.setText(alert.getErrorCode());
         errorText.setText(alert.getErrorText());
         date.setText(alert.getDate().getCorrectTimeInfo());
+        adaptIconToErrorType(imageView, alert.getErrorType());
 
         button.setTag(position);
         button.setOnClickListener(this::onClick);
@@ -64,4 +71,23 @@ public class CustomListAdapterAlerts extends ArrayAdapter<Alert> {
         this.alertList.remove(position);
         notifyDataSetChanged();
     }
+
+    public void adaptIconToErrorType(ImageView imageView, ErrorType errorType) {
+        switch (errorType) {
+            case INFO:
+                imageView.getDrawable().setTint(ContextCompat.getColor(this.getContext(), R.color.info_grey));
+                break;
+            case ERROR:
+                imageView.setImageResource(R.drawable.ic_error);
+                imageView.getDrawable().setTint(ContextCompat.getColor(this.getContext(), R.color.error_red));
+                break;
+            case WARNING:
+                imageView.setRotation(180.0f);
+                imageView.getDrawable().setTint(ContextCompat.getColor(this.getContext(), R.color.warning_orange));
+                break;
+            default:
+                break;
+        }
+    }
+
 }

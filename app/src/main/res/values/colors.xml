@@ -11,4 +11,8 @@
     <color name="secondaryTextColor">#000000</color>
     <color name="deactivatedTextColor">#707070</color>
     <color name="darkBlue">#181D24</color>
+    <color name="transparent">#00000000</color>
+    <color name="info_grey">#707070</color>
+    <color name="warning_orange">#FF5722</color>
+    <color name="error_red">#FF2222</color>
 </resources>

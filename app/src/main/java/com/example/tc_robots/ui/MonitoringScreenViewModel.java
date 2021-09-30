@@ -37,10 +37,10 @@ public class MonitoringScreenViewModel extends ViewModel {
         Alert alert3 = new Alert(ErrorType.INFO, "Info 3333", "Neuer Roboter ist da!", date);
         Alert alert4 = new Alert(ErrorType.ERROR, "Error 2345", "Core Temp over 9000", new CustomDate());
         List<Alert> alerts = new ArrayList<>();
+        alerts.add(alert4);
         alerts.add(alert1);
         alerts.add(alert2);
         alerts.add(alert3);
-        alerts.add(alert4);
         alertList.setValue(alerts);
     }
 

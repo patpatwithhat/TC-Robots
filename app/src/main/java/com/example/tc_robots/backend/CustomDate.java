@@ -11,6 +11,9 @@ public class CustomDate {
     }
 
     private String getHoursAndMinutes() {
+        if (date.getMinuteOfHour() < 10) {
+            return date.getHourOfDay() + ":0" + date.getMinuteOfHour();
+        }
         return date.getHourOfDay() + ":" + date.getMinuteOfHour();
     }
 
@@ -19,13 +22,12 @@ public class CustomDate {
     }
 
     public String getCorrectTimeInfo() {
-        if((date.toLocalDate()).equals(new LocalDate())) {
+        if ((date.toLocalDate()).equals(new LocalDate())) {
             return getHoursAndMinutes();
         }
-        if((date.toLocalDate()).equals(new LocalDate().minusDays(1))) {
+        if ((date.toLocalDate()).equals(new LocalDate().minusDays(1))) {
             return "YDA";
-        }
-        else{
+        } else {
             return "PREV";
         }
 

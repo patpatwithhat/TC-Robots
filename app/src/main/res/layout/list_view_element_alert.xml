@@ -74,8 +74,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="top">
 
-                <Button
-                    style="@style/Widget.AppCompat.Button"
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_close_alert"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -101,6 +100,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:minLines="2"
+                android:layout_marginEnd="5dp"
                 android:text="Content"
                 android:textSize="@dimen/font_size"
                 tools:ignore="RtlSymmetry" />
