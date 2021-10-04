@@ -58,6 +58,12 @@ public class MonitoringScreenViewModel extends ViewModel {
         return alertList;
     }
 
+    public void removeAlert(int position) {
+        List<Alert> alerts = alertList.getValue();
+        Objects.requireNonNull(alerts).remove(position);
+        alertList.setValue(alerts);
+    }
+
     //filter active, if errorType.length == 0 <= means errorType is Empty
     private void setIsFilterActive(ErrorType... errorType) {
         if (errorType.length == 0) {

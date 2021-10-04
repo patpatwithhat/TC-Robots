@@ -15,12 +15,12 @@
             android:layout_marginBottom="15dp"
             android:backgroundTint="@color/primaryDarkColor">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Robot messages"
-                android:textSize="@dimen/font_size_header"
-                android:textColor="@color/primaryTextColor" />
+                android:textColor="@color/primaryTextColor"
+                android:textSize="@dimen/font_size_header" />
         </LinearLayout>
 
         <LinearLayout
@@ -39,7 +39,7 @@
                 android:backgroundTint="@color/transparent"
                 app:borderWidth="0dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_filter_errors"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                 android:text="errors"
                 android:textColor="@color/primaryTextColor" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_filter_warnings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 android:text="Warnings"
                 android:textColor="@color/primaryTextColor" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_filter_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.TCRobots" parent="Theme.MaterialComponents">
+    <style name="Theme.MyApp." parent="Base.Theme.MyApp">
         <!-- Primary brand colors. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
@@ -14,7 +14,7 @@
         <item name="colorOnSecondary">@color/primaryDarkColor</item>
         <item name="colorError">@color/error_red</item>
         <item name="colorOnError">@color/primaryDarkColor</item>
-        <item name="colorSurface">@color/primaryColor</item>
+        <item name="colorSurface">@color/primarySemiDarkColor</item>
         <item name="colorOnSurface">@color/primaryTextColor</item>
         <item name="android:colorBackground">@color/primaryDarkColor</item>
         <item name="colorOnBackground">@color/primaryTextColor</item>

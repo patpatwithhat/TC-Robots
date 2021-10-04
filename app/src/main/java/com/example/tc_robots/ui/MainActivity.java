@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.accessibility.AccessibilityManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,29 +12,40 @@ import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.tc_robots.MyApplication;
 import com.example.tc_robots.R;
-import com.example.tc_robots.backend.ConnectTask;
 import com.example.tc_robots.backend.TCPClient;
+import com.example.tc_robots.backend.TCPConnection;
+import com.example.tc_robots.backend.TCPMessage;
 import com.example.tc_robots.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, TCPClient.OnMessageReceived {
 
     ActivityMainBinding binding;
-    TCPClient client;
     private static final String TAG = "MainActivity";
+    TCPClient client;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         navControllerInit();
-        //new ConnectTask().execute("");
+        MyApplication myApplication = (MyApplication) getApplication();
+
+        ExecutorService executorService = myApplication.getExecutorService();
+        client = new TCPClient(this, executorService);
+        client.sendMessage("message from Fragment");
     }
 
     /**
@@ -45,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
      */
     private void navControllerInit() {
         NavController navController = Navigation.findNavController(this, R.id.fragmentContainerView);
-        BottomNavigationView navigationView= binding.bottomNavigationView;
+        BottomNavigationView navigationView = binding.bottomNavigationView;
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setOnItemSelectedListener(this);
     }
@@ -72,5 +80,17 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         }
         item.setChecked(true);
         return true;
+    }
+
+    public TCPClient getTCPClient() {
+        return client;
+    }
+
+
+    @Override
+    public void messageReceived(String message) {
+        Log.d(TAG, message);
+        TCPMessage tcpMessage = new TCPMessage(message);
+        client.sendMessage(tcpMessage.getErrorCode()+"Received");
     }
 }

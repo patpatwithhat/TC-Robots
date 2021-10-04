@@ -16,6 +16,7 @@
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/drawable/menu_btn_animation.xml" value="0.4166666666666667" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/drawable/menu_btn_animation_close_to_menu.xml" value="0.246875" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/drawable/menu_btn_animation_menu_to_close.xml" value="0.4203125" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/font/roboto.xml" value="0.2609375" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_orderscreen.xml" value="0.264" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/activity_statusscreen.xml" value="0.4041666666666667" />
@@ -24,8 +25,9 @@
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/fragment_code_scanner.xml" value="0.140625" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/fragment_monitoringscreen.xml" value="0.264" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/fragment_orderscreen.xml" value="0.23072916666666668" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/fragment_statusscreen.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/list_view_element.xml" value="0.4041666666666667" />
-        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/list_view_element_alert.xml" value="0.5865580448065173" />
+        <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/layout/list_view_element_alert.xml" value="0.536" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/menu/bottom_menu.xml" value="0.23072916666666668" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.4203125" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.246875" />

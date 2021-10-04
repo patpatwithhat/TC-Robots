@@ -2,10 +2,12 @@ package com.example.tc_robots.ui;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
@@ -18,14 +20,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
+import com.example.tc_robots.MyApplication;
 import com.example.tc_robots.R;
 import com.example.tc_robots.backend.Alert;
 import com.example.tc_robots.backend.ErrorType;
+import com.example.tc_robots.backend.TCPClient;
 import com.example.tc_robots.databinding.FragmentMonitoringscreenBinding;
 import com.example.tc_robots.uihelpers.CustomListAdapterAlerts;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MonitoringScreenFragment extends Fragment {
     private FragmentMonitoringscreenBinding binding;
@@ -55,6 +61,8 @@ public class MonitoringScreenFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(MonitoringScreenViewModel.class);
         initUiElements();
         updateMenuBtnByErrorType(false);
+
+
     }
 
     @Override
@@ -65,7 +73,7 @@ public class MonitoringScreenFragment extends Fragment {
     private void initUiElements() {
         viewModel.getAlertList().observe(getViewLifecycleOwner(), this::updateAdapterWithNewList);
         viewModel.getIsFilterActive().observe(getViewLifecycleOwner(), this::updateMenuBtnByErrorType);
-        binding.listviewAlerts.setOnTouchListener(this::onTouchListener);
+        binding.listviewAlerts.setOnItemClickListener(this::onListViewClick);
         binding.btnShowAll.setOnClickListener(this::showAllAlerts);
         binding.btnFilterErrors.setOnClickListener(this::filterAlertsForErrors);
         binding.btnFilterWarnings.setOnClickListener(this::filterAlertsForWarnings);
@@ -93,20 +101,22 @@ public class MonitoringScreenFragment extends Fragment {
         }
     }
 
-    private boolean onTouchListener(View view, MotionEvent motionEvent) {
-        new MaterialAlertDialogBuilder(this.requireContext(),R.style.Theme_TCRobots)
-                .setTitle("title")
-                .setMessage("message")
-                .setPositiveButton("Stop Robot", (DialogInterface.OnClickListener) (dialogInterface, i) -> {
-                    view.getParent();
-                    return;
+    //On ListView Element click show Alert Dialog
+    private void onListViewClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+        List<Alert> alerts = viewModel.getAlertList().getValue();
+        Alert alert = Objects.requireNonNull(alerts).get(position);
+
+        new MaterialAlertDialogBuilder(adapterView.getContext())
+                .setTitle(alert.getErrorCode())
+                .setMessage(alert.getErrorText())
+                .setPositiveButton("Stop Robot", (dialogInterface, i1) -> {
+
                 })
-                .setNegativeButton("Ignore", (DialogInterface.OnClickListener) (dialogInterface, i) -> {
-                    return;
+                .setNegativeButton("Ignore", (dialogInterface, i2) -> {
                 })
                 .setIcon(R.drawable.ic_launcher_foreground)
                 .show();
-        return true;
     }
 
     private void showAllAlerts(View view) {

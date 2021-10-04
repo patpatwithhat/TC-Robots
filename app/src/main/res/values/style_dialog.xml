@@ -1,20 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!--Top level DayNight theme to be used in AndroidManifest.xml-->
-    <style name="Theme.MyApp" parent="Base.Theme.MyApp" />
-    <!--Base custom theme which will be shared between both light and dark theme variants-->
-    <style name="Base.Theme.MyApp" parent="Base.Theme.MaterialThemeBuilder">
-        <!--Material color attributes (light theme) -->
-        <!--colorPrimary colors map to components and elements, such as app bars and buttons. -->
-        <!--colorSecondary colors are most often used as accents on components, such as FABs and -->
-        <!--selection controls.-->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Theme.AlertDialog" parent="Base.Theme.MaterialThemeBuilder">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorSecondaryVariant">@color/secondaryColor</item>
-        <!--colorBackground appears behind scrollable content and is used for the default window-->
-        <!--background. colorSurface is mapped to the surface of components such as cards, sheets-->
-        <!--and menus. colorError is used to indicate an error state for components such as-->
-        <!--text fields.-->
         <item name="android:colorBackground">@color/primaryDarkColor</item>
         <item name="colorSurface">@color/primarySemiDarkColor</item>
         <item name="colorError">@color/error_red</item>
@@ -48,21 +39,40 @@
         </item>
         <!--Component styles-->
         <item name="materialAlertDialogTheme">@style/Theme.MyApp.AlertDialog</item>
-
-        <!--       <item name="bottomSheetDialogTheme">@style/ThemeOverlay.MyTheme.BottomSheetDialog</item>
-               <item name="navigationViewStyle">@style/Widget.MyTheme.NavigationView</item>-->
-        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
     </style>
 
-    <style name="Base.Theme.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:statusBarColor" tools:ignore="NewApi">@color/primaryDarkColor</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
-        <item name="android:navigationBarColor" tools:ignore="NewApi">
-            ?android:attr/colorBackground
-        </item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
-        <item name="android:navigationBarDividerColor" tools:ignore="NewApi">
-            @color/transparent
-        </item>
+    <style name="Theme.MyApp.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogTitleTextStyle">@style/TitleTextStyleCenter</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/BodyTextStyleCenter</item>
+        <item name="buttonBarStyle">@style/ButtonBarStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="colorSurface">@color/primaryColor</item>
+    </style>
+
+
+    <style name="TitleTextStyleCenter" parent="MaterialAlertDialog.MaterialComponents.Title.Text.CenterStacked">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="BodyTextStyleCenter" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+    </style>
+
+    <style name="ButtonBarStyle">
+
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/secondaryColor</item>
+        <item name="rippleColor">@color/secondaryLightColor</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/deactivatedTextColor</item>
+        <item name="rippleColor">#a4a4a4</item>
     </style>
 </resources>

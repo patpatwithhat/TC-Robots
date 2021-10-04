@@ -3,12 +3,14 @@
     <color name="primaryColor">#10141c</color>
     <color name="primaryLightColor">#1A263A</color>
     <color name="primaryExtraLightColor">#363F51</color>
+    <color name="primarySemiDarkColor">#181D24</color>
     <color name="primaryDarkColor">#000000</color>
     <color name="secondaryColor">#ff5722</color>
     <color name="secondaryLightColor">#ff8a50</color>
     <color name="secondaryDarkColor">#c41c00</color>
-    <color name="primaryTextColor">#ffffff</color>
-    <color name="secondaryTextColor">#000000</color>
+    <color name="primaryTextColor">#E6ffffff</color>
+    <color name="secondaryTextColor">#F0000000</color>
+
     <color name="deactivatedTextColor">#707070</color>
     <color name="darkBlue">#181D24</color>
     <color name="transparent">#00000000</color>
