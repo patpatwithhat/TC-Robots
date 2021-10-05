@@ -1,6 +1,7 @@
-package com.example.tc_robots.backend;
+package com.example.tc_robots.backend.monitoring;
 
-import java.util.Date;
+import com.example.tc_robots.backend.monitoring.CustomDate;
+import com.example.tc_robots.backend.monitoring.ErrorType;
 
 public class Alert {
     ErrorType errorType;

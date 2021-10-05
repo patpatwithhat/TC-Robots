@@ -3,6 +3,8 @@ package com.example.tc_robots;
 import android.app.Application;
 import android.content.res.Configuration;
 
+import com.example.tc_robots.backend.network.TCPClient;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,6 +16,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        TCPClient.initInstance( executorService);
         // Required initialization logic here!
     }
 

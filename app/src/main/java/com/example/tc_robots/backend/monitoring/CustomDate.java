@@ -1,4 +1,4 @@
-package com.example.tc_robots.backend;
+package com.example.tc_robots.backend.monitoring;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

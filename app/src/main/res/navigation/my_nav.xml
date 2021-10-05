@@ -6,10 +6,10 @@
 
     <fragment
         android:id="@+id/scannerScreenFragment"
-        android:name="com.example.tc_robots.ui.ScannerScreenFragment"
+        android:name="com.example.tc_robots.ui.scannerscreen.ScannerScreenFragment"
         android:label="ScannerScreenFragment" />
     <fragment
         android:id="@+id/monitoringScreenFragment"
-        android:name="com.example.tc_robots.ui.MonitoringScreenFragment"
+        android:name="com.example.tc_robots.ui.monitoringscreen.MonitoringScreenFragment"
         android:label="MonitoringScreenFragment" />
 </navigation>

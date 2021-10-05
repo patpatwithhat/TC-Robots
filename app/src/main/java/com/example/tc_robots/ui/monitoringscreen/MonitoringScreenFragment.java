@@ -1,33 +1,26 @@
-package com.example.tc_robots.ui;
+package com.example.tc_robots.ui.monitoringscreen;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
-import com.example.tc_robots.MyApplication;
 import com.example.tc_robots.R;
-import com.example.tc_robots.backend.Alert;
-import com.example.tc_robots.backend.ErrorType;
-import com.example.tc_robots.backend.TCPClient;
+import com.example.tc_robots.backend.monitoring.Alert;
+import com.example.tc_robots.backend.monitoring.ErrorType;
 import com.example.tc_robots.databinding.FragmentMonitoringscreenBinding;
+import com.example.tc_robots.ui.MainActivity;
 import com.example.tc_robots.uihelpers.CustomListAdapterAlerts;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
@@ -61,19 +54,11 @@ public class MonitoringScreenFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(MonitoringScreenViewModel.class);
         initUiElements();
         updateMenuBtnByErrorType(false);
-
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        TCPClient.getInstance().sendMessage("Hi");
-    }
-
-    public void retryTCPConnection() {
-        MainActivity activity = (MainActivity) getActivity();
-        Objects.requireNonNull(activity).initTCPClient();
     }
 
     private void initUiElements() {
@@ -90,7 +75,6 @@ public class MonitoringScreenFragment extends Fragment {
         adapter = new CustomListAdapterAlerts(MonitoringScreenFragment.this.requireContext(), alertList);
         binding.listviewAlerts.setAdapter(adapter);
     }
-
     //plays animation of Menu Button
     private void updateMenuBtnByErrorType(Boolean isFilterActive) {
         AnimatedVectorDrawableCompat drawable = null;
@@ -119,8 +103,9 @@ public class MonitoringScreenFragment extends Fragment {
                 .setPositiveButton("Stop Robot", (dialogInterface, i1) -> {
 
                 })
-                .setNegativeButton("Ignore", (dialogInterface, i2) -> {
+                .setNegativeButton("Ignore Alert", (dialogInterface, i2) -> {
                 })
+                .setNeutralButton("Close",((dialogInterface, i3) ->{} ))
                 .setIcon(R.drawable.ic_launcher_foreground)
                 .show();
     }

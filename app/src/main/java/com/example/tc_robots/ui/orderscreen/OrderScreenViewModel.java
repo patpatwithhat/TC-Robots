@@ -1,10 +1,8 @@
-package com.example.tc_robots.ui;
+package com.example.tc_robots.ui.orderscreen;
 
 import androidx.lifecycle.ViewModel;
 
 import com.example.tc_robots.backend.Customer;
-import com.example.tc_robots.backend.InputValidation;
-import com.google.android.material.textfield.TextInputEditText;
 
 public class OrderScreenViewModel extends ViewModel {
 

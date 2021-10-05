@@ -1,23 +1,25 @@
-package com.example.tc_robots.ui;
+package com.example.tc_robots.ui.monitoringscreen;
+
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.tc_robots.backend.Alert;
-import com.example.tc_robots.backend.Article;
-import com.example.tc_robots.backend.CustomDate;
-import com.example.tc_robots.backend.ErrorType;
+import com.example.tc_robots.backend.monitoring.Alert;
+import com.example.tc_robots.backend.monitoring.CustomDate;
+import com.example.tc_robots.backend.monitoring.ErrorType;
+import com.example.tc_robots.backend.network.TCPClient;
 import com.example.tc_robots.uihelpers.ListViewFilter;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class MonitoringScreenViewModel extends ViewModel {
+public class MonitoringScreenViewModel extends ViewModel implements TCPClient.OnMessageReceived {
+    private static final String TAG = "MonitoringScreenViewModel";
     private final MutableLiveData<List<Alert>> alertList = new MutableLiveData<>();
     //used to update btn_show_all if filter is active or not
     private final MutableLiveData<Boolean> isFilterActive = new MutableLiveData<>();
@@ -42,6 +44,7 @@ public class MonitoringScreenViewModel extends ViewModel {
         alerts.add(alert2);
         alerts.add(alert3);
         alertList.setValue(alerts);
+        TCPClient.getInstance().addOnMessageReceivedListener(this);
     }
 
     public List<Alert> filterForErrorTypeAndSetActiveErrorType(ErrorType errorType) {
@@ -78,4 +81,8 @@ public class MonitoringScreenViewModel extends ViewModel {
     }
 
 
+    @Override
+    public void messageReceived(String message) {
+        Log.d(TAG,"from viewmodel: "+message);
+    }
 }

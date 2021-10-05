@@ -1,7 +1,7 @@
 package com.example.tc_robots.uihelpers;
 
-import com.example.tc_robots.backend.Alert;
-import com.example.tc_robots.backend.ErrorType;
+import com.example.tc_robots.backend.monitoring.Alert;
+import com.example.tc_robots.backend.monitoring.ErrorType;
 
 import java.util.ArrayList;
 import java.util.List;

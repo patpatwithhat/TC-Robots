@@ -1,4 +1,4 @@
-package com.example.tc_robots.ui;
+package com.example.tc_robots.ui.scannerscreen;
 
 import android.Manifest;
 import android.os.Bundle;

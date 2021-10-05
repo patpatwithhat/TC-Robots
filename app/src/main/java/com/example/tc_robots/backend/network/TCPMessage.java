@@ -1,4 +1,4 @@
-package com.example.tc_robots.backend;
+package com.example.tc_robots.backend.network;
 
 public class TCPMessage {
     String errorCode;
@@ -29,11 +29,11 @@ public class TCPMessage {
         this.metaInfo = metaInfo;
     }
 
-    //rawMessage: 123_Temperat4455
-    //3nr_8char4nr
+    //rawMessage: 123_Temperatur4455
+    //3nr_10char4nr
     public TCPMessage(String rawMessage) {
         errorCode= rawMessage.substring(0,3);
-        confirmationText = rawMessage.substring(4,12);
-        metaInfo = Integer.parseInt(rawMessage.substring(12));
+        confirmationText = rawMessage.substring(4,14);
+        metaInfo = Integer.parseInt(rawMessage.substring(14));
     }
 }

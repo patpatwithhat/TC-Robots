@@ -1,4 +1,4 @@
-package com.example.tc_robots.backend;
+package com.example.tc_robots.backend.network;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

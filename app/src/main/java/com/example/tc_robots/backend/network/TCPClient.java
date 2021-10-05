@@ -1,4 +1,4 @@
-package com.example.tc_robots.backend;
+package com.example.tc_robots.backend.network;
 
 import static org.apache.harmony.awt.internal.nls.Messages.getString;
 
@@ -14,17 +14,18 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 public class TCPClient {
     public static final String TAG = "TCPClient";
-    //public static final String SERVER_IP = "192.168.125.1"; //server IP address
-    public static final String SERVER_IP = "192.168.0.200"; //server IP address
+    public static final String SERVER_IP = "192.168.125.1"; //server IP address
+    //public static final String SERVER_IP = "192.168.0.200"; //server IP address
     public static final int SERVER_PORT = 1025;
     // message to send to the server
     private String mServerMessage;
-    // sends message received notifications
-    private OnMessageReceived mMessageListener = null;
+    private List<OnMessageReceived> messageReceivedListeners = new ArrayList<>();
     // while this is true, the server will continue running
     private static boolean mRun = false;
     // used to send messages
@@ -35,15 +36,18 @@ public class TCPClient {
     private final Executor executor;
     private static TCPClient instance;
 
-    private TCPClient(OnMessageReceived listener, Executor executor) {
-        mMessageListener = listener;
+    //leave out onMessageReceived
+    //add with own function addListener
+    //save Listeners in List
+    //send message to all Listeners
+    private TCPClient(Executor executor) {
         this.executor = executor;
         run();
     }
 
-    public static void initInstance(OnMessageReceived listener, Executor executor) {
+    public static void initInstance(Executor executor) {
         if (instance == null) {
-            instance = new TCPClient(listener, executor);
+            instance = new TCPClient(executor);
         }
     }
 
@@ -67,9 +71,10 @@ public class TCPClient {
                         while (mRun) {
                             mServerMessage = mBufferIn.readLine();
 
-                            if (mServerMessage != null && mMessageListener != null) {
+                            if (mServerMessage != null && messageReceivedListeners.size()>0) {
                                 //call the method messageReceived from MyActivity class
-                                mMessageListener.messageReceived(mServerMessage);
+                                sendMessageToListeners(mServerMessage);
+                               // mMessageListener.messageReceived(mServerMessage);
                             }
                         }
                     }catch (SocketException se){
@@ -118,7 +123,6 @@ public class TCPClient {
                     mBufferOut.flush();
                     mBufferOut.close();
                 }
-                mMessageListener = null;
                 mBufferIn = null;
                 mBufferOut = null;
                 mServerMessage = null;
@@ -127,12 +131,25 @@ public class TCPClient {
         });
     }
 
-    private void sendSocketErrorToRestartClient() {
-        mMessageListener.messageReceived(String.valueOf(R.string.ERROR_TCP_CLIENT));
+    public void addOnMessageReceivedListener(OnMessageReceived messageReceived) {
+        messageReceivedListeners.add(messageReceived);
     }
 
-    //Declare the interface. The method messageReceived(String message) will must be implemented in the Activity
-    //class at on AsyncTask doInBackground
+    public void removeMessageReceivedListener(OnMessageReceived messageReceived) {
+        messageReceivedListeners.remove(messageReceived);
+    }
+
+    private void sendMessageToListeners(String message) {
+        for (OnMessageReceived listener: messageReceivedListeners) {
+            listener.messageReceived(message);
+        }
+    }
+
+    private void sendSocketErrorToRestartClient() {
+        sendMessageToListeners(String.valueOf(R.string.ERROR_TCP_CLIENT));
+    }
+
+    //Declare the interface. The method messageReceived(String message) can be implemented at any point
     public interface OnMessageReceived {
         public void messageReceived(String message);
     }
