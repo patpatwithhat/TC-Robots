@@ -1,5 +1,7 @@
 package com.example.tc_robots.ui;
 
+import static java.lang.Thread.sleep;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,24 +19,18 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.tc_robots.MyApplication;
 import com.example.tc_robots.R;
 import com.example.tc_robots.backend.TCPClient;
-import com.example.tc_robots.backend.TCPConnection;
 import com.example.tc_robots.backend.TCPMessage;
 import com.example.tc_robots.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, TCPClient.OnMessageReceived {
 
     ActivityMainBinding binding;
     private static final String TAG = "MainActivity";
-    TCPClient client;
+    ExecutorService executorService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,9 +39,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         navControllerInit();
         MyApplication myApplication = (MyApplication) getApplication();
 
-        ExecutorService executorService = myApplication.getExecutorService();
-        client = new TCPClient(this, executorService);
-        client.sendMessage("message from Fragment");
+        executorService = myApplication.getExecutorService();
+        initTCPClient();
+    }
+
+    public void initTCPClient() {
+        TCPClient.initInstance(this, executorService);
     }
 
     /**
@@ -82,15 +81,27 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         return true;
     }
 
-    public TCPClient getTCPClient() {
-        return client;
-    }
-
 
     @Override
     public void messageReceived(String message) {
-        Log.d(TAG, message);
-        TCPMessage tcpMessage = new TCPMessage(message);
-        client.sendMessage(tcpMessage.getErrorCode()+"Received");
+        Log.d(TAG, "new message: " + message);
+        try {
+            if (Integer.parseInt(message) == R.string.ERROR_TCP_CLIENT) {
+
+                Log.d(TAG, "Trying to reconnect... ");
+                TCPClient.getInstance().stopClient();
+                Thread.sleep(500);
+                TCPClient.initInstance(this, executorService);
+
+            }
+        } catch (Exception exception) {
+            try {
+                TCPMessage tcpMessage = new TCPMessage(message);
+                TCPClient.getInstance().sendMessage(tcpMessage.getErrorCode() + "Received");
+            } catch (Exception e) {
+                TCPClient.getInstance().sendMessage("Received Msg, but wrong format");
+            }
+        }
+
     }
 }

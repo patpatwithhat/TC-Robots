@@ -1,6 +1,10 @@
 package com.example.tc_robots.backend;
 
+import static org.apache.harmony.awt.internal.nls.Messages.getString;
+
 import android.util.Log;
+
+import com.example.tc_robots.R;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,9 +13,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.TimerTask;
+import java.net.SocketException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 public class TCPClient {
     public static final String TAG = "TCPClient";
@@ -23,21 +26,29 @@ public class TCPClient {
     // sends message received notifications
     private OnMessageReceived mMessageListener = null;
     // while this is true, the server will continue running
-    private boolean mRun = false;
+    private static boolean mRun = false;
     // used to send messages
     private PrintWriter mBufferOut;
     // used to read messages from the server
     private BufferedReader mBufferIn;
 
     private final Executor executor;
+    private static TCPClient instance;
 
-    /**
-     * Constructor of the class. OnMessagedReceived listens for the messages received from server
-     */
-    public TCPClient(OnMessageReceived listener, Executor executor) {
+    private TCPClient(OnMessageReceived listener, Executor executor) {
         mMessageListener = listener;
         this.executor = executor;
         run();
+    }
+
+    public static void initInstance(OnMessageReceived listener, Executor executor) {
+        if (instance == null) {
+            instance = new TCPClient(listener, executor);
+        }
+    }
+
+    public static TCPClient getInstance() {
+        return instance;
     }
 
     public void run() {
@@ -61,14 +72,18 @@ public class TCPClient {
                                 mMessageListener.messageReceived(mServerMessage);
                             }
                         }
+                    }catch (SocketException se){
+                        Log.e(TAG, String.valueOf(R.string.ERROR_TCP_CLIENT));
+                        sendSocketErrorToRestartClient();
                     } catch (Exception e) {
                         Log.e(TAG, "S: Error", e);
                     } finally {
+                        Log.e(TAG, "Socket closed");
                         socket.close();
                     }
-
                 } catch (Exception e) {
-                    Log.e(TAG, "C: Error", e);
+                    Log.e(TAG, String.valueOf(R.string.ERROR_TCP_CLIENT));
+                    sendSocketErrorToRestartClient();
                 }
             }
         });
@@ -76,7 +91,6 @@ public class TCPClient {
 
     /**
      * Sends the message entered by client to the server
-     *
      * @param message text entered by client
      */
     public void sendMessage(final String message) {
@@ -92,7 +106,6 @@ public class TCPClient {
         });
     }
 
-
     /**
      * Close the connection and release the members
      */
@@ -105,17 +118,18 @@ public class TCPClient {
                     mBufferOut.flush();
                     mBufferOut.close();
                 }
-
                 mMessageListener = null;
                 mBufferIn = null;
                 mBufferOut = null;
                 mServerMessage = null;
+                instance = null;
             }
         });
-
-
     }
 
+    private void sendSocketErrorToRestartClient() {
+        mMessageListener.messageReceived(String.valueOf(R.string.ERROR_TCP_CLIENT));
+    }
 
     //Declare the interface. The method messageReceived(String message) will must be implemented in the Activity
     //class at on AsyncTask doInBackground

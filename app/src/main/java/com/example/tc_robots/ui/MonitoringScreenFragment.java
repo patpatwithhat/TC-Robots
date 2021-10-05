@@ -68,6 +68,12 @@ public class MonitoringScreenFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        TCPClient.getInstance().sendMessage("Hi");
+    }
+
+    public void retryTCPConnection() {
+        MainActivity activity = (MainActivity) getActivity();
+        Objects.requireNonNull(activity).initTCPClient();
     }
 
     private void initUiElements() {
