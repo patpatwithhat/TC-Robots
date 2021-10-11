@@ -1,7 +1,13 @@
 package com.example.tc_robots.ui.monitoringscreen;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +26,7 @@ import com.example.tc_robots.backend.monitoring.Alert;
 import com.example.tc_robots.backend.monitoring.ErrorType;
 import com.example.tc_robots.databinding.FragmentMonitoringscreenBinding;
 import com.example.tc_robots.ui.MainActivity;
+import com.example.tc_robots.ui.addrobot.AddRobotActivity;
 import com.example.tc_robots.uihelpers.CustomListAdapterAlerts;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -45,6 +52,8 @@ public class MonitoringScreenFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_monitoringscreen, container, false);
+        MainActivity activity = (MainActivity)getActivity();
+        Objects.requireNonNull(activity).setTitle("Robot messages");
         return binding.getRoot();
     }
 
@@ -52,6 +61,7 @@ public class MonitoringScreenFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(MonitoringScreenViewModel.class);
+        setHasOptionsMenu(true);
         initUiElements();
         updateMenuBtnByErrorType(false);
     }
@@ -59,6 +69,36 @@ public class MonitoringScreenFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        this.requireActivity().getMenuInflater().inflate(R.menu.monitoring_menu, menu);
+
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_robot:
+                openAddRobotWindow();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openAddRobotWindow() {
+        Log.d(TAG,"addRoboClick");
+        Intent i = new Intent(this.requireContext(), AddRobotActivity.class);
+        startActivity(i);
+        //Activity Intent
+        //Bottom navigation ausblenden
+        //add on Backstack
+        //Hold activity status after first opening
+        //json in project to edit custom ip/port pairs
     }
 
     private void initUiElements() {

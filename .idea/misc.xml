@@ -3,8 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Patrick.Kuesters/AndroidStudioProjects/TC-Robots/app/src/main/res/drawable/ic_plus.xml" value="0.11875" />
+        <entry key="..\:/Users/Patrick.Kuesters/AndroidStudioProjects/TC-Robots/app/src/main/res/layout/activity_add_robot.xml" value="0.1" />
         <entry key="..\:/Users/Patrick.Kuesters/AndroidStudioProjects/TC-Robots/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Patrick.Kuesters/AndroidStudioProjects/TC-Robots/app/src/main/res/layout/fragment_monitoringscreen.xml" value="0.1" />
+        <entry key="..\:/Users/Patrick.Kuesters/AndroidStudioProjects/TC-Robots/app/src/main/res/layout/list_view_element_robot.xml" value="0.22" />
+        <entry key="..\:/Users/Patrick.Kuesters/AndroidStudioProjects/TC-Robots/app/src/main/res/menu/bottom_menu.xml" value="0.11666666666666667" />
+        <entry key="..\:/Users/Patrick.Kuesters/AndroidStudioProjects/TC-Robots/app/src/main/res/menu/monitoring_menu.xml" value="0.1" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/drawable/ic_close.xml" value="0.14444444444444443" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/drawable/ic_error.xml" value="0.30925925925925923" />
         <entry key="..\:/Users/kuest/AndroidStudioProjects/TCRobots/app/src/main/res/drawable/ic_exit_btn.xml" value="0.246875" />
