@@ -10,6 +10,7 @@ import com.example.tc_robots.backend.monitoring.Alert;
 import com.example.tc_robots.backend.monitoring.CustomDate;
 import com.example.tc_robots.backend.monitoring.ErrorType;
 import com.example.tc_robots.backend.network.TCPClient;
+import com.example.tc_robots.backend.network.TCPClientSet;
 import com.example.tc_robots.uihelpers.ListViewFilter;
 
 import org.joda.time.DateTime;
@@ -17,6 +18,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class MonitoringScreenViewModel extends ViewModel implements TCPClient.OnMessageReceived {
     private static final String TAG = "MonitoringScreenViewModel";
@@ -45,6 +47,7 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
         alerts.add(alert3);
         alertList.setValue(alerts);
         TCPClient.getInstance().addOnMessageReceivedListener(this);
+        TCPClientSet.getInstance().getTcpClientList().forEach(client -> client.addOnMessageReceivedListener(this));
     }
 
     public List<Alert> filterForErrorTypeAndSetActiveErrorType(ErrorType errorType) {
@@ -84,5 +87,7 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     @Override
     public void messageReceived(String message) {
         Log.d(TAG,"from viewmodel: "+message);
+
+        Alert alert = new Alert(message);
     }
 }

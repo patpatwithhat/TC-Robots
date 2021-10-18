@@ -4,6 +4,8 @@ import static org.apache.harmony.awt.internal.nls.Messages.getString;
 
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.tc_robots.R;
 
 import java.io.BufferedReader;
@@ -16,6 +18,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 public class TCPClient {
@@ -27,7 +30,7 @@ public class TCPClient {
     private String mServerMessage;
     private List<OnMessageReceived> messageReceivedListeners = new ArrayList<>();
     // while this is true, the server will continue running
-    private static boolean mRun = false;
+    public MutableLiveData<Boolean> isActive = new MutableLiveData<>();
     // used to send messages
     private PrintWriter mBufferOut;
     // used to read messages from the server
@@ -36,12 +39,9 @@ public class TCPClient {
     private final Executor executor;
     private static TCPClient instance;
 
-    //leave out onMessageReceived
-    //add with own function addListener
-    //save Listeners in List
-    //send message to all Listeners
     private TCPClient(Executor executor) {
         this.executor = executor;
+        setIsInactive();
         run();
     }
 
@@ -66,21 +66,23 @@ public class TCPClient {
                     try {
                         mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                         mBufferIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        mRun = true;
+                        setIsActive();
                         //in this while the client listens for the messages sent by the server
-                        while (mRun) {
+                        while (Objects.requireNonNull(isActive.getValue())) {
                             mServerMessage = mBufferIn.readLine();
 
-                            if (mServerMessage != null && messageReceivedListeners.size()>0) {
+                            if (mServerMessage != null && messageReceivedListeners.size() > 0) {
                                 //call the method messageReceived from MyActivity class
                                 sendMessageToListeners(mServerMessage);
-                               // mMessageListener.messageReceived(mServerMessage);
+                                // mMessageListener.messageReceived(mServerMessage);
                             }
                         }
-                    }catch (SocketException se){
+                    } catch (SocketException se) {
                         Log.e(TAG, String.valueOf(R.string.ERROR_TCP_CLIENT));
+                        setIsInactive();
                         sendSocketErrorToRestartClient();
                     } catch (Exception e) {
+                        setIsInactive();
                         Log.e(TAG, "S: Error", e);
                     } finally {
                         Log.e(TAG, "Socket closed");
@@ -88,14 +90,17 @@ public class TCPClient {
                     }
                 } catch (Exception e) {
                     Log.e(TAG, String.valueOf(R.string.ERROR_TCP_CLIENT));
+                    setIsInactive();
                     sendSocketErrorToRestartClient();
                 }
             }
+
         });
     }
 
     /**
      * Sends the message entered by client to the server
+     *
      * @param message text entered by client
      */
     public void sendMessage(final String message) {
@@ -111,6 +116,14 @@ public class TCPClient {
         });
     }
 
+    private void setIsActive() {
+        isActive.setValue(true);
+    }
+
+    private void setIsInactive() {
+        isActive.setValue(false);
+    }
+
     /**
      * Close the connection and release the members
      */
@@ -118,7 +131,7 @@ public class TCPClient {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                mRun = false;
+                setIsInactive();
                 if (mBufferOut != null) {
                     mBufferOut.flush();
                     mBufferOut.close();
@@ -140,7 +153,7 @@ public class TCPClient {
     }
 
     private void sendMessageToListeners(String message) {
-        for (OnMessageReceived listener: messageReceivedListeners) {
+        for (OnMessageReceived listener : messageReceivedListeners) {
             listener.messageReceived(message);
         }
     }
