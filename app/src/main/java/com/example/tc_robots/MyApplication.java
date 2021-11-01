@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.res.Configuration;
 
 import com.example.tc_robots.backend.network.TCPClient;
+import com.example.tc_robots.backend.network.TCPClientSet;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +18,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         TCPClient.initInstance( executorService);
+        TCPClientSet.initInstance();
         // Required initialization logic here!
     }
 
