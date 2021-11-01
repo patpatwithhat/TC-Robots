@@ -51,4 +51,8 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.1902shubh:SendMail:1.0.0'
     implementation 'joda-time:joda-time:2.10.11'
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    // For control over item selection of both touch and mouse driven selection
+    implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
+    implementation 'com.google.code.gson:gson:2.8.8'
 }

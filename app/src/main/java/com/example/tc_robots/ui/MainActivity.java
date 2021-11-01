@@ -40,13 +40,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         navControllerInit();
-        MyApplication myApplication = (MyApplication) getApplication();
-
-        executorService = myApplication.getExecutorService();
         initTCPClient();
     }
 
     public void initTCPClient() {
+        MyApplication application = (MyApplication) this.getApplication();
+        executorService = application.getExecutorService();
         TCPClient.getInstance().addOnMessageReceivedListener(this);
     }
 

@@ -26,7 +26,9 @@ import com.example.tc_robots.backend.monitoring.Alert;
 import com.example.tc_robots.backend.monitoring.ErrorType;
 import com.example.tc_robots.databinding.FragmentMonitoringscreenBinding;
 import com.example.tc_robots.ui.MainActivity;
-import com.example.tc_robots.ui.addrobot.AddRobotActivity;
+import com.example.tc_robots.ui.addrobotscreen.AddRobotActivity;
+import com.example.tc_robots.ui.addrobotscreen.AddRobotViewModel;
+import com.example.tc_robots.ui.addrobotscreen.AddRobotViewModelFactory;
 import com.example.tc_robots.uihelpers.CustomListAdapterAlerts;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -60,7 +62,7 @@ public class MonitoringScreenFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(MonitoringScreenViewModel.class);
+        viewModel = new ViewModelProvider(this, new MonitoringViewModelFactory(this.requireActivity().getApplication())).get(MonitoringScreenViewModel.class);
         setHasOptionsMenu(true);
         initUiElements();
         updateMenuBtnByErrorType(false);

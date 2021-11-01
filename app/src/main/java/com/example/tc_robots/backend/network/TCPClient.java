@@ -20,8 +20,8 @@ import java.util.concurrent.Executor;
 
 public class TCPClient {
     public static final String TAG = "TCPClient";
-    public static final String SERVER_IP = "192.168.125.1"; //server IP address
-    //public static final String SERVER_IP = "192.168.0.200"; //server IP address
+    //public static final String SERVER_IP = "192.168.125.1"; //server IP address
+    public static final String SERVER_IP = "192.168.0.200"; //server IP address
     public static final int SERVER_PORT = 1025;
     // message to send to the server
     private String mServerMessage;
@@ -36,10 +36,6 @@ public class TCPClient {
     private final Executor executor;
     private static TCPClient instance;
 
-    //leave out onMessageReceived
-    //add with own function addListener
-    //save Listeners in List
-    //send message to all Listeners
     private TCPClient(Executor executor) {
         this.executor = executor;
         run();

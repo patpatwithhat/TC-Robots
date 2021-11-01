@@ -1,13 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_robot_name"
-        android:layout_width="wrap_content"
-        android:textColor="@color/primaryTextColor"
-        android:text="Robot1"
-        android:layout_height="wrap_content" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/listview_bg_robots"
 
-</LinearLayout>
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:id="@+id/lv_element_robot"
+        >
+
+        <LinearLayout
+            android:layout_width="41dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.05"
+            android:orientation="vertical">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/icon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_cirlcle" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.95"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.70">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_robot_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Robot"
+                        android:textColor="@color/primaryTextColor"
+                        android:textSize="@dimen/font_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="top">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_remove_robot"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:background="#00000000"
+                        android:drawableTop="@drawable/ic_close"
+                        android:insetTop="-3dp"
+                        android:paddingTop="3dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

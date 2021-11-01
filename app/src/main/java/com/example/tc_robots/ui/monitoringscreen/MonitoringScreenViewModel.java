@@ -1,5 +1,8 @@
 package com.example.tc_robots.ui.monitoringscreen;
 
+import static com.example.tc_robots.Constants.ROBOT_LIST_KEY;
+
+import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -9,7 +12,9 @@ import androidx.lifecycle.ViewModel;
 import com.example.tc_robots.backend.monitoring.Alert;
 import com.example.tc_robots.backend.monitoring.CustomDate;
 import com.example.tc_robots.backend.monitoring.ErrorType;
+import com.example.tc_robots.backend.monitoring.Robot;
 import com.example.tc_robots.backend.network.TCPClient;
+import com.example.tc_robots.backend.tinyDB.TinyDB;
 import com.example.tc_robots.uihelpers.ListViewFilter;
 
 import org.joda.time.DateTime;
@@ -24,9 +29,13 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     //used to update btn_show_all if filter is active or not
     private final MutableLiveData<Boolean> isFilterActive = new MutableLiveData<>();
     private final ListViewFilter listViewFilter = new ListViewFilter();
+    private Application application;
+    private final TinyDB tinydb;
 
-    public MonitoringScreenViewModel() {
+    public MonitoringScreenViewModel(Application application) {
         uiTest();
+        this.application = application;
+        tinydb = new TinyDB(application.getApplicationContext());
     }
 
     private void uiTest() {
@@ -45,6 +54,11 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
         alerts.add(alert3);
         alertList.setValue(alerts);
         TCPClient.getInstance().addOnMessageReceivedListener(this);
+    }
+
+    public void getSavedRobots() {
+        List<Object> listRobotObjects = tinydb.getListObject(ROBOT_LIST_KEY, Robot.class);
+        //listRobotObjects.forEach(robot -> addAndSaveRobot((Robot) robot));
     }
 
     public List<Alert> filterForErrorTypeAndSetActiveErrorType(ErrorType errorType) {
