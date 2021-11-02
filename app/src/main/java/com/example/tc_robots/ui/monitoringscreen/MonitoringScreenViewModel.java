@@ -30,18 +30,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+
 public class MonitoringScreenViewModel extends ViewModel implements TCPClient.OnMessageReceived {
     private static final String TAG = "MonitoringScreenViewModel";
-    private final MutableLiveData<List<Alert>> alertList = new MutableLiveData<>();
+    private final MutableLiveData<List<Alert>> alertList = new MutableLiveData<>(new ArrayList<>());
     //used to update btn_show_all if filter is active or not
     private final MutableLiveData<Boolean> isFilterActive = new MutableLiveData<>();
     private final ListViewFilter listViewFilter = new ListViewFilter();
+    private final MutableLiveData<String> lastMsg = new MutableLiveData<>();
+    private final MutableLiveData<TCPMessage> lastTCPMsg = new MutableLiveData<>();
+
     private Application application;
 
     public MonitoringScreenViewModel(Application application) {
-        uiTest();
+        //  uiTest();
+        initBackend();
         this.application = application;
     }
+
 
     private void uiTest() {
         CustomDate date = new CustomDate();
@@ -60,7 +66,7 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
         alertList.setValue(alerts);
         // TCPClient.getInstance().addOnMessageReceivedListener(this);
 
-        initBackend();
+
     }
 
 
@@ -74,6 +80,11 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
         });
     }
 
+    public void newIncomingTCPMsg(TCPMessage tcpMessage) {
+        Alert newAlert = new Alert(ErrorType.ERROR, tcpMessage.getErrorCode(), tcpMessage.getConfirmationText() + tcpMessage.getMetaInfo());
+        addAlert(newAlert);
+    }
+
     public List<Alert> filterForErrorTypeAndSetActiveErrorType(ErrorType errorType) {
         setIsFilterActive(errorType);
         return listViewFilter.filterListByErrorType(Objects.requireNonNull(alertList.getValue()), errorType);
@@ -82,6 +93,20 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     public List<Alert> getAllAlertsAndClearFilter() {
         setIsFilterActive();
         return getAlertList().getValue();
+    }
+
+    public void addAlert(Alert alert) {
+        List<Alert> list = getAlertList().getValue();
+        Objects.requireNonNull(list).add(alert);
+        alertList.setValue(list);
+    }
+
+    public LiveData<String> getLastMsgString() {
+        return lastMsg;
+    }
+
+    public LiveData<TCPMessage> getLastTCPMsg() {
+        return lastTCPMsg;
     }
 
     public LiveData<List<Alert>> getAlertList() {
@@ -107,32 +132,27 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
         return isFilterActive;
     }
 
-/*    private void sendToast(String message){
-        Activity activity = this;
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                MaterialTextView textView= findViewById(R.id.tv_status);
-                textView.setText(message);
-            }
-        });
-    }*/
-
+    //TODO: Pass Robot with Message or Hold Message List in Robot
     @Override
-    public void messageReceived(TCPClient client, String message) {
+    public void messageReceived(Robot robot, String message) {
         Log.d(TAG, "new message: " + message);
+
         try {
-            if (Integer.parseInt(message) == R.string.ERROR_TCP_CLIENT) {
+            if (message.equals("Shutdown acknowledged") || Integer.parseInt(message) == R.string.ERROR_TCP_CLIENT) {
                 Log.d(TAG, "Trying to reconnect... ");
-                client.stopClient();
-                Thread.sleep(500);
-                client.run();
+                lastMsg.postValue("ERROR_TCP_CLIENT");
+                robot.getTCPClient().stopClient();
+                Thread.sleep(5000);
+                robot.getTCPClient().run();
             }
         } catch (Exception exception) {
             try {
+                lastMsg.postValue(message);
                 TCPMessage tcpMessage = new TCPMessage(message);
-                client.sendMessage(tcpMessage.getErrorCode() + "Received");
+                lastTCPMsg.postValue(tcpMessage);
+                robot.getTCPClient().sendMessage(tcpMessage.getErrorCode() + "Received");
             } catch (Exception e) {
-                client.sendMessage("Received Msg, but wrong format");
+                robot.getTCPClient().sendMessage("Received Msg, but wrong format");
             }
         }
     }

@@ -9,7 +9,6 @@ import com.example.tc_robots.backend.monitoring.Robot;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -35,6 +34,7 @@ public class TCPClient {
     // used to read messages from the server
     private BufferedReader mBufferIn;
 
+    private Socket msocket;
     private final Executor executor;
     private final Robot robot;
 
@@ -52,10 +52,11 @@ public class TCPClient {
                 try {
                     InetAddress serverAddr = InetAddress.getByName(robot.getIp());
                     Log.d(TAG, "C: Connecting... to port: " + robot.getPort());
-                    Socket socket = new Socket(serverAddr, Integer.parseInt(robot.getPort()));
+                    sendMessage("C: Connecting... to port: " + robot.getPort());
+                    msocket = new Socket(serverAddr, Integer.parseInt(robot.getPort()));
                     try {
-                        mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-                        mBufferIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(msocket.getOutputStream())), true);
+                        mBufferIn = new BufferedReader(new InputStreamReader(msocket.getInputStream()));
                         setIsActive();
                         //in this while the client listens for the messages sent by the server
                         while (isActive) {
@@ -75,7 +76,7 @@ public class TCPClient {
                         Log.e(TAG, "S: Error", e);
                     } finally {
                         Log.e(TAG, "Socket closed");
-                        socket.close();
+                        msocket.close();
                     }
                 } catch (Exception e) {
                     Log.e(TAG, String.valueOf(R.string.ERROR_TCP_CLIENT));
@@ -129,6 +130,7 @@ public class TCPClient {
                 mBufferIn = null;
                 mBufferOut = null;
                 mServerMessage = null;
+                msocket = null;
             }
         });
     }
@@ -143,7 +145,7 @@ public class TCPClient {
 
     private void sendMessageToListeners(String message) {
         for (OnMessageReceived listener : messageReceivedListeners) {
-            listener.messageReceived(this, message);
+            listener.messageReceived(this.robot, message);
         }
     }
 
@@ -153,7 +155,7 @@ public class TCPClient {
 
     //Declare the interface. The method messageReceived(String message) can be implemented at any point
     public interface OnMessageReceived {
-        public void messageReceived(TCPClient client, String message);
+        public void messageReceived(Robot robot, String message);
     }
 
 }

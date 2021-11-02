@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TC-Robotics</string>
     <string name="ERROR_TCP_CLIENT">ERROR_TCP_CLIENT</string>
+    <string name="SHUTDOWN">Shutdown acknowledged</string>
 </resources>
