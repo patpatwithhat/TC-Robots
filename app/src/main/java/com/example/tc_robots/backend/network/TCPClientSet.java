@@ -1,44 +1,49 @@
 package com.example.tc_robots.backend.network;
 
+import com.example.tc_robots.backend.monitoring.Robot;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 public class TCPClientSet {
     private static TCPClientSet instance;
     //private final OnClientStatusChange onClientStatusChange;
     //List<OnClientStatusChange> onClientStatusChangeList = new ArrayList<>();
 
-    Set<TCPClient> tcpClientList = new HashSet<>();
-
+    List<TCPClient> tcpClientList = new ArrayList<>();
+    ExecutorService executorService;
 
 
     public static TCPClientSet getInstance() {
         return instance;
     }
 
-    private TCPClientSet() {
+    private TCPClientSet(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 
-    public static TCPClientSet initInstance() {
+    public static TCPClientSet initInstance(ExecutorService executorService) {
         if (getInstance() != null) {
             return getInstance();
         }
-        return new TCPClientSet();
+        instance = new TCPClientSet(executorService);
+        return instance;
     }
 
-    public void addClient(TCPClient client) {
-        tcpClientList.add(client);
+    public void createClient(Robot robot) {
+        tcpClientList.add(robot.getTCPClient() == null ? robot.setTPClient(new TCPClient(robot, executorService)) : robot.getTCPClient());
         //notifyClientAdded(client);
     }
 
     public void removeClient(TCPClient client) {
         tcpClientList.remove(client);
-       // notifyClientRemoved(client);
+        // notifyClientRemoved(client);
     }
 
-    public Set<TCPClient> getTcpClientList() {
+    public List<TCPClient> getTcpClientList() {
         return tcpClientList;
     }
 /*

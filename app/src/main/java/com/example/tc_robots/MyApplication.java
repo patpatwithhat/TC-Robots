@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 
 import com.example.tc_robots.backend.network.TCPClient;
 import com.example.tc_robots.backend.network.TCPClientSet;
+import com.example.tc_robots.backend.tinyDB.TinySingleton;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,8 +18,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        TCPClient.initInstance( executorService);
-        TCPClientSet.initInstance();
+        TCPClientSet.initInstance(executorService);
+        TinySingleton.initInstance(this);
         // Required initialization logic here!
     }
 

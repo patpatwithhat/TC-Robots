@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.tc_robots.backend.monitoring.Robot;
 import com.example.tc_robots.backend.tinyDB.TinyDB;
+import com.example.tc_robots.backend.tinyDB.TinySingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +29,10 @@ public class AddRobotViewModel extends ViewModel {
 
     private final MutableLiveData<List<Robot>> robots = new MutableLiveData<>();
     private final Application application;
-    private final TinyDB tinydb;
 
     public AddRobotViewModel(Application application) {
         this.application = application;
         robots.setValue(new ArrayList<>());
-        tinydb = new TinyDB(application.getApplicationContext());
-        // cleanSharedPref();
     }
 
     public LiveData<List<Robot>> getRobots() {
@@ -42,20 +40,13 @@ public class AddRobotViewModel extends ViewModel {
         return robots;
     }
 
-    public void cleanSharedPref() {
-        tinydb.clear();
-    }
-
     public void getSavedRobots() {
-        List<Object> listRobotObjects = tinydb.getListObject(ROBOT_LIST_KEY, Robot.class);
-        listRobotObjects.forEach(robot -> addRobot((Robot) robot));
+        List<Robot> savedList =  TinySingleton.getInstance().getSavedRobots();
+        savedList.forEach(this::addRobot);
     }
 
     public void saveRobotsToSharedPref() {
-        List<Robot> robotList = robots.getValue();
-        ArrayList<Object> listRobotObjects = new ArrayList<Object>();
-        Objects.requireNonNull(robotList).forEach(robot -> listRobotObjects.add((Object) robot));
-        tinydb.putListObject(ROBOT_LIST_KEY, listRobotObjects);
+        TinySingleton.getInstance().saveRobotsToTinyDB(robots.getValue());
     }
 
     public void addAndSaveRobot(Robot robot) {
@@ -64,14 +55,9 @@ public class AddRobotViewModel extends ViewModel {
     }
 
     public void updateAndSaveRobot(Robot robot) {
-        updateRobot(robot);
         saveRobotsToSharedPref();
     }
 
-    private void updateRobot(Robot robot) {
-        List<Robot> robotList = robots.getValue();
-        String s = "";
-    }
 
     private void addRobot(Robot robot) {
         List<Robot> robotList = robots.getValue();

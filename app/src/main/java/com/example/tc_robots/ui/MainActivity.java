@@ -29,7 +29,7 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.concurrent.ExecutorService;
 
-public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, TCPClient.OnMessageReceived {
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     ActivityMainBinding binding;
     private static final String TAG = "MainActivity";
@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     public void initTCPClient() {
         MyApplication application = (MyApplication) this.getApplication();
         executorService = application.getExecutorService();
-        TCPClient.getInstance().addOnMessageReceivedListener(this);
     }
 
     /**
@@ -83,36 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         return true;
     }
 
-    private void sendToast(String message){
-        Activity activity = this;
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                MaterialTextView textView= findViewById(R.id.tv_status);
-                textView.setText(message);
-            }
-        });
-    }
 
-    @Override
-    public void messageReceived(String message) {
-        sendToast(message);
-        Log.d(TAG, "new message: " + message);
-        try {
-            if (Integer.parseInt(message) == R.string.ERROR_TCP_CLIENT) {
-                sendToast("Roboter offline");
-                Log.d(TAG, "Trying to reconnect... ");
-                TCPClient.getInstance().stopClient();
-                Thread.sleep(500);
-                TCPClient.initInstance(executorService);
-            }
-        } catch (Exception exception) {
-            try {
-                TCPMessage tcpMessage = new TCPMessage(message);
-                TCPClient.getInstance().sendMessage(tcpMessage.getErrorCode() + "Received");
-            } catch (Exception e) {
-                TCPClient.getInstance().sendMessage("Received Msg, but wrong format");
-            }
-        }
 
-    }
+
 }
