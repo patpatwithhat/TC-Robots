@@ -24,11 +24,10 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 import com.example.tc_robots.R;
 import com.example.tc_robots.backend.monitoring.Alert;
 import com.example.tc_robots.backend.monitoring.ErrorType;
+import com.example.tc_robots.backend.network.TCPMessage;
 import com.example.tc_robots.databinding.FragmentMonitoringscreenBinding;
 import com.example.tc_robots.ui.MainActivity;
 import com.example.tc_robots.ui.addrobotscreen.AddRobotActivity;
-import com.example.tc_robots.ui.addrobotscreen.AddRobotViewModel;
-import com.example.tc_robots.ui.addrobotscreen.AddRobotViewModelFactory;
 import com.example.tc_robots.uihelpers.CustomListAdapterAlerts;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -106,11 +105,22 @@ public class MonitoringScreenFragment extends Fragment {
     private void initUiElements() {
         viewModel.getAlertList().observe(getViewLifecycleOwner(), this::updateAdapterWithNewList);
         viewModel.getIsFilterActive().observe(getViewLifecycleOwner(), this::updateMenuBtnByErrorType);
+        viewModel.getLastMsgString().observe(getViewLifecycleOwner(), this::updateLastTCPMsg);
+        viewModel.getLastTCPMsg().observe(getViewLifecycleOwner(), this::newIncomingTCPMsgUI);
         binding.listviewAlerts.setOnItemClickListener(this::onListViewClick);
         binding.btnShowAll.setOnClickListener(this::showAllAlerts);
         binding.btnFilterErrors.setOnClickListener(this::filterAlertsForErrors);
         binding.btnFilterWarnings.setOnClickListener(this::filterAlertsForWarnings);
         binding.btnFilterInfo.setOnClickListener(this::filterAlertsForInfos);
+    }
+
+    private void newIncomingTCPMsgUI(TCPMessage tcpMessage) {
+        viewModel.newIncomingTCPMsg(tcpMessage);
+    }
+
+
+    private void updateLastTCPMsg(String s) {
+        binding.tvStatus.setText(s);
     }
 
     private void updateAdapterWithNewList(List<Alert> alertList) {

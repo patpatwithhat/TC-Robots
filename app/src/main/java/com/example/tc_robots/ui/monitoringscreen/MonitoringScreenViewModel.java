@@ -1,5 +1,8 @@
 package com.example.tc_robots.ui.monitoringscreen;
 
+import static com.example.tc_robots.Constants.ROBOT_LIST_KEY;
+
+import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
@@ -11,18 +14,23 @@ import com.example.tc_robots.R;
 import com.example.tc_robots.backend.monitoring.Alert;
 import com.example.tc_robots.backend.monitoring.CustomDate;
 import com.example.tc_robots.backend.monitoring.ErrorType;
+import com.example.tc_robots.backend.monitoring.Robot;
 import com.example.tc_robots.backend.network.TCPClient;
 import com.example.tc_robots.backend.network.TCPClientSet;
 import com.example.tc_robots.backend.network.TCPMessage;
+import com.example.tc_robots.backend.tinyDB.TinyDB;
+import com.example.tc_robots.backend.tinyDB.TinySingleton;
 import com.example.tc_robots.uihelpers.ListViewFilter;
+import com.google.android.material.textview.MaterialTextView;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
-public class MonitoringScreenViewModel extends ViewModel implements TCPClient.OnMessageReceived, TCPClientSet.OnTCPClientSetChange {
+public class MonitoringScreenViewModel extends ViewModel implements TCPClient.OnMessageReceived {
     private static final String TAG = "MonitoringScreenViewModel";
     private final MutableLiveData<List<Alert>> alertList = new MutableLiveData<>();
     //used to update btn_show_all if filter is active or not
@@ -58,7 +66,12 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
 
     //TODO: Not called, when activityAddRobot closed
     private void initBackend() {
-        TCPClientSet.getInstance().addOnChangeListener(this);
+        List<Robot> robotList = TinySingleton.getInstance().getSavedRobots();
+        robotList.forEach(robot -> TCPClientSet.getInstance().createClient(robot));
+        robotList.forEach(robot -> {
+            robot.getTCPClient().run();
+            robot.getTCPClient().addOnMessageReceivedListener(this::messageReceived);
+        });
     }
 
     public List<Alert> filterForErrorTypeAndSetActiveErrorType(ErrorType errorType) {
@@ -112,7 +125,7 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
                 Log.d(TAG, "Trying to reconnect... ");
                 client.stopClient();
                 Thread.sleep(500);
-                client.startClient();
+                client.run();
             }
         } catch (Exception exception) {
             try {
@@ -122,16 +135,5 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
                 client.sendMessage("Received Msg, but wrong format");
             }
         }
-    }
-
-
-    @Override
-    public void clientAdded(TCPClient client) {
-        client.addOnMessageReceivedListener(this);
-    }
-
-    @Override
-    public void clientRemoved(TCPClient client) {
-        client.removeMessageReceivedListener(this);
     }
 }

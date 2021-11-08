@@ -29,11 +29,11 @@ public class TCPMessage {
         this.metaInfo = metaInfo;
     }
 
-    //rawMessage: 123_Temperatur4455
-    //3nr_10char4nr
+    //rawMessage: 1234_Temperatur4455
+    //4nr_10char4nr
     public TCPMessage(String rawMessage) {
-        errorCode= rawMessage.substring(0,3);
-        confirmationText = rawMessage.substring(4,14);
-        metaInfo = Integer.parseInt(rawMessage.substring(14));
+        errorCode= rawMessage.substring(0,4);
+        confirmationText = rawMessage.substring(5,15);
+        metaInfo = Integer.parseInt(rawMessage.substring(15));
     }
 }

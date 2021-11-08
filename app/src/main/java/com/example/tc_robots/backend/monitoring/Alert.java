@@ -15,6 +15,13 @@ public class Alert {
         this.date = date;
     }
 
+    public Alert(ErrorType errorType, String errorCode, String errorText) {
+        this.errorType = errorType;
+        this.errorCode = errorCode;
+        this.errorText = errorText;
+        this.date = new CustomDate();
+    }
+
     public Alert(String rawString) {
         this.errorType = errorType;
         this.errorCode = errorCode;
