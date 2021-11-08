@@ -1,8 +1,5 @@
 package com.example.tc_robots.ui.monitoringscreen;
 
-import static com.example.tc_robots.Constants.ROBOT_LIST_KEY;
-
-import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
@@ -18,17 +15,13 @@ import com.example.tc_robots.backend.monitoring.Robot;
 import com.example.tc_robots.backend.network.TCPClient;
 import com.example.tc_robots.backend.network.TCPClientSet;
 import com.example.tc_robots.backend.network.TCPMessage;
-import com.example.tc_robots.backend.tinyDB.TinyDB;
-import com.example.tc_robots.backend.tinyDB.TinySingleton;
 import com.example.tc_robots.uihelpers.ListViewFilter;
-import com.google.android.material.textview.MaterialTextView;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class MonitoringScreenViewModel extends ViewModel implements TCPClient.OnMessageReceived {
     private static final String TAG = "MonitoringScreenViewModel";
@@ -36,11 +29,15 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     //used to update btn_show_all if filter is active or not
     private final MutableLiveData<Boolean> isFilterActive = new MutableLiveData<>();
     private final ListViewFilter listViewFilter = new ListViewFilter();
+    private final MutableLiveData<String> lastMsg = new MutableLiveData<>();
+    private final MutableLiveData<TCPMessage> lastTCPMsg = new MutableLiveData<>();
+
     private Application application;
 
     public MonitoringScreenViewModel(Application application) {
         uiTest();
         this.application = application;
+        initOnMessageReceivedListeners();
     }
 
     private void uiTest() {
@@ -60,18 +57,18 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
         alertList.setValue(alerts);
         // TCPClient.getInstance().addOnMessageReceivedListener(this);
 
-        initBackend();
+
     }
 
 
     //TODO: Not called, when activityAddRobot closed
-    private void initBackend() {
-        List<Robot> robotList = TinySingleton.getInstance().getSavedRobots();
-        robotList.forEach(robot -> TCPClientSet.getInstance().createClient(robot));
-        robotList.forEach(robot -> {
-            robot.getTCPClient().run();
-            robot.getTCPClient().addOnMessageReceivedListener(this::messageReceived);
-        });
+    private void initOnMessageReceivedListeners() {
+        TCPClientSet.getInstance().getTcpClientList().forEach(client -> client.addOnMessageReceivedListener(this));
+    }
+
+    public void newIncomingTCPMsg(TCPMessage tcpMessage) {
+        Alert newAlert = new Alert(ErrorType.ERROR, tcpMessage.getErrorCode(), tcpMessage.getConfirmationText() + tcpMessage.getMetaInfo());
+        addAlert(newAlert);
     }
 
     public List<Alert> filterForErrorTypeAndSetActiveErrorType(ErrorType errorType) {
@@ -87,6 +84,20 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     public LiveData<List<Alert>> getAlertList() {
         return alertList;
     }
+    public void addAlert(Alert alert) {
+        List<Alert> list = getAlertList().getValue();
+        Objects.requireNonNull(list).add(alert);
+        alertList.setValue(list);
+    }
+
+    public LiveData<String> getLastMsgString() {
+        return lastMsg;
+    }
+
+    public LiveData<TCPMessage> getLastTCPMsg() {
+        return lastTCPMsg;
+    }
+
 
     public void removeAlert(int position) {
         List<Alert> alerts = alertList.getValue();
@@ -107,32 +118,28 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
         return isFilterActive;
     }
 
-/*    private void sendToast(String message){
-        Activity activity = this;
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                MaterialTextView textView= findViewById(R.id.tv_status);
-                textView.setText(message);
-            }
-        });
-    }*/
+
 
     @Override
-    public void messageReceived(TCPClient client, String message) {
+    public void messageReceived(Robot robot, String message) {
         Log.d(TAG, "new message: " + message);
+
         try {
-            if (Integer.parseInt(message) == R.string.ERROR_TCP_CLIENT) {
+            if (message.equals("Shutdown acknowledged") || Integer.parseInt(message) == R.string.ERROR_TCP_CLIENT) {
                 Log.d(TAG, "Trying to reconnect... ");
-                client.stopClient();
-                Thread.sleep(500);
-                client.run();
+                lastMsg.postValue("ERROR_TCP_CLIENT");
+                TCPClientSet.getInstance().getClientByRobot(robot).stopClient();
+                Thread.sleep(5000);
+                TCPClientSet.getInstance().getClientByRobot(robot).startClient();
             }
         } catch (Exception exception) {
             try {
+                lastMsg.postValue(message);
                 TCPMessage tcpMessage = new TCPMessage(message);
-                client.sendMessage(tcpMessage.getErrorCode() + "Received");
+                lastTCPMsg.postValue(tcpMessage);
+                TCPClientSet.getInstance().getClientByRobot(robot).sendMessage(tcpMessage.getErrorCode() + "Received");
             } catch (Exception e) {
-                client.sendMessage("Received Msg, but wrong format");
+                TCPClientSet.getInstance().getClientByRobot(robot).sendMessage("Received Msg, but wrong format");
             }
         }
     }
