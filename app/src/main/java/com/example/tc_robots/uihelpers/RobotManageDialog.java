@@ -5,23 +5,23 @@ import android.view.LayoutInflater;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModel;
 
 import com.example.tc_robots.R;
 import com.example.tc_robots.backend.monitoring.Robot;
 import com.example.tc_robots.databinding.AlertAddRobotBinding;
 import com.example.tc_robots.ui.addrobotscreen.AddRobotViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class RobotAddDialog {
+public class RobotManageDialog {
     private Context context;
     private AlertAddRobotBinding binding;
     private AddRobotViewModel viewModel;
 
-    public RobotAddDialog(Context context) {
+    public RobotManageDialog(Context context) {
         this.context = context;
     }
 
@@ -36,14 +36,16 @@ public class RobotAddDialog {
 
     public void createAndShow() {
         binding = DataBindingUtil.inflate(LayoutInflater.from(this.getContext()), R.layout.alert_add_robot, null, false);
-        AlertDialog dialog = new AlertDialog.Builder(this.getContext())
+        AlertDialog dialog= new MaterialAlertDialogBuilder(this.getContext())
                 .setView(binding.getRoot())
-                .setPositiveButton("Add robot", (dialogInterface, i) -> {
+                .setTitle("Add a new device")
+                .setPositiveButton("Add device", (dialogInterface, i) -> {
                 })
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                 .create();
 
         dialog.show();
+       // dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view1 -> {
             if (checkAndSetInputErrors() && checkAndSetDuplicateError()) {
                 viewModel.addAndSaveRobot((new Robot(getRobotName(),
@@ -58,7 +60,7 @@ public class RobotAddDialog {
 
     public void createAndShowForRobotUpdate(Robot robot, int positionOfOldEntry, OnRobotUpdated robotUpdated) {
         binding = DataBindingUtil.inflate(LayoutInflater.from(this.getContext()), R.layout.alert_add_robot, null, false);
-        AlertDialog dialog = new AlertDialog.Builder(this.getContext())
+        AlertDialog dialog= new MaterialAlertDialogBuilder(this.getContext())
                 .setView(binding.getRoot())
                 .setPositiveButton("Update Robot", (dialogInterface, i) -> {
                 })

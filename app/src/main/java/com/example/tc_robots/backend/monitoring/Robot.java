@@ -1,14 +1,11 @@
 package com.example.tc_robots.backend.monitoring;
 
-import com.example.tc_robots.backend.network.TCPClient;
-
 import java.util.Comparator;
 
 public class Robot implements Comparable<Robot> {
     private String name;
     private String ip;
     private String port;
-    private TCPClient client;
 
     public Robot(String name, String ip, String port) {
         this.name = name;
@@ -38,15 +35,6 @@ public class Robot implements Comparable<Robot> {
 
     public void setPort(String port) {
         this.port = port;
-    }
-
-    public TCPClient setTPClient(TCPClient client) {
-        this.client = client;
-        return client;
-    }
-
-    public TCPClient getTCPClient() {
-        return this.client;
     }
 
     /**

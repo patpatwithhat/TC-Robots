@@ -1,16 +1,13 @@
 package com.example.tc_robots.ui.addrobotscreen;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,13 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.tc_robots.MyApplication;
 import com.example.tc_robots.R;
 import com.example.tc_robots.backend.monitoring.Robot;
-import com.example.tc_robots.databinding.AlertAddRobotBinding;
 import com.example.tc_robots.databinding.FragmentAddRobotBinding;
 import com.example.tc_robots.uihelpers.CustomListAdapterConnectedRobots;
-import com.example.tc_robots.uihelpers.RobotAddDialog;
+import com.example.tc_robots.uihelpers.RobotManageDialog;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 public class AddRobotScreenFragment extends Fragment {
@@ -55,7 +50,7 @@ public class AddRobotScreenFragment extends Fragment {
 
         // initDataDummy();
         initUiElements();
-        viewModel.getSavedRobots();
+        viewModel.getRunningRobots();
     }
 
 
@@ -77,9 +72,9 @@ public class AddRobotScreenFragment extends Fragment {
     }
 
     private void createAlertDialogue() {
-        RobotAddDialog robotAddDialog = new RobotAddDialog(requireContext());
-        robotAddDialog.setViewModel(viewModel);
-        robotAddDialog.createAndShow();
+        RobotManageDialog robotManageDialog = new RobotManageDialog(requireContext());
+        robotManageDialog.setViewModel(viewModel);
+        robotManageDialog.createAndShow();
     }
 
 

@@ -1,7 +1,5 @@
 package com.example.tc_robots.backend.network;
 
-import static org.apache.harmony.awt.internal.nls.Messages.getString;
-
 import android.util.Log;
 
 import com.example.tc_robots.R;
@@ -9,7 +7,6 @@ import com.example.tc_robots.backend.monitoring.Robot;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -28,6 +25,7 @@ public class TCPClient {
     // message to send to the server
     private String mServerMessage;
     private List<OnMessageReceived> messageReceivedListeners = new ArrayList<>();
+    private List<OnConnectionStatusChanged> connectionStatusChangedListeners = new ArrayList<>();
     // while this is true, the server will continue running
     public Boolean isActive = false;
     // used to send messages
@@ -36,7 +34,8 @@ public class TCPClient {
     private BufferedReader mBufferIn;
 
     private final Executor executor;
-    private final Robot robot;
+    private Robot robot;
+
 
     public TCPClient(Robot robot, Executor executor) {
         this.executor = executor;
@@ -45,7 +44,7 @@ public class TCPClient {
     }
 
 
-    public void run() {
+    public void startClient() {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -108,10 +107,12 @@ public class TCPClient {
 
     private void setIsActive() {
         isActive = true;
+        sendConnectionStatusChangeEvent();
     }
 
     private void setInactive() {
         isActive = false;
+        sendConnectionStatusChangeEvent();
     }
 
     /**
@@ -133,6 +134,21 @@ public class TCPClient {
         });
     }
 
+
+    public void restartClient() {
+        executor.execute(() -> {
+            if (mBufferOut != null) {
+                mBufferOut.flush();
+                mBufferOut.close();
+            }
+            mBufferIn = null;
+            mBufferOut = null;
+            mServerMessage = null;
+            startClient();
+        });
+
+    }
+
     public void addOnMessageReceivedListener(OnMessageReceived messageReceived) {
         messageReceivedListeners.add(messageReceived);
     }
@@ -151,9 +167,33 @@ public class TCPClient {
         sendMessageToListeners(String.valueOf(R.string.ERROR_TCP_CLIENT));
     }
 
+    public void addOnConnectionStatusChangeListener(OnConnectionStatusChanged connectionStatusChanged) {
+        connectionStatusChangedListeners.add(connectionStatusChanged);
+    }
+
+    public void removeOnConnectionStatusChangeListener(OnConnectionStatusChanged connectionStatusChanged) {
+        connectionStatusChangedListeners.remove(connectionStatusChanged);
+    }
+
+    private void sendConnectionStatusChangeEvent() {
+        connectionStatusChangedListeners.forEach(listener -> listener.connectionStatusChanged(isActive));
+    }
+
+    public Robot getRobot() {
+        return robot;
+    }
+
+    public void setRobot(Robot robot) {
+        this.robot = robot;
+    }
+
     //Declare the interface. The method messageReceived(String message) can be implemented at any point
     public interface OnMessageReceived {
         public void messageReceived(TCPClient client, String message);
+    }
+
+    public interface OnConnectionStatusChanged {
+        void connectionStatusChanged(Boolean status);
     }
 
 }

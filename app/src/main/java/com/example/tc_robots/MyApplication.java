@@ -3,7 +3,6 @@ package com.example.tc_robots;
 import android.app.Application;
 import android.content.res.Configuration;
 
-import com.example.tc_robots.backend.network.TCPClient;
 import com.example.tc_robots.backend.network.TCPClientSet;
 import com.example.tc_robots.backend.tinyDB.TinySingleton;
 
@@ -18,8 +17,10 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        TCPClientSet.initInstance(executorService);
         TinySingleton.initInstance(this);
+       //TinySingleton.getInstance().cleanSharedPref();
+        TCPClientSet.initInstance(executorService);
+        TCPClientSet.getInstance().loadSavedRobotsFromSharedPref();
         // Required initialization logic here!
     }
 

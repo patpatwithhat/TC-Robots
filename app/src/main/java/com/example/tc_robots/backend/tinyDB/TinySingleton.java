@@ -34,16 +34,16 @@ public class TinySingleton {
     }
 
     public List<Robot> getSavedRobots() {
-        List<Object> listRobotObjects = tinydb.getListObject(ROBOT_LIST_KEY, Robot.class);
+        List<Object> listRobot = tinydb.getListObject(ROBOT_LIST_KEY, Robot.class);
         List<Robot> robots = new ArrayList<>();
-        listRobotObjects.forEach(robot -> robots.add((Robot) robot));
+        listRobot.forEach(robot -> robots.add((Robot) robot));
         return robots;
     }
 
-    public void saveRobotsToTinyDB(List<Robot> robotList) {
-        ArrayList<Object> listRobotObjects = new ArrayList<Object>();
-        Objects.requireNonNull(robotList).forEach(robot -> listRobotObjects.add((Object) robot));
-        tinydb.putListObject(ROBOT_LIST_KEY, listRobotObjects);
+    public void saveRobotsToTinyDB(List<Robot> robots) {
+        ArrayList<Object> listRobotObj = new ArrayList<Object>();
+        Objects.requireNonNull(robots).forEach(robot -> listRobotObj.add((Object) robot));
+        tinydb.putListObject(ROBOT_LIST_KEY, listRobotObj);
     }
 
     public void cleanSharedPref() {

@@ -17,4 +17,5 @@
     <color name="info_grey">#707070</color>
     <color name="warning_orange">#FF5722</color>
     <color name="error_red">#FF2222</color>
+    <color name="online_green">#88CA70</color>
 </resources>
