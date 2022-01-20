@@ -120,7 +120,7 @@ public class MonitoringScreenFragment extends Fragment {
 
 
     private void updateLastTCPMsg(String s) {
-        binding.tvStatus.setText(s);
+        //binding.tvStatus.setText(s);
     }
 
     private void updateAdapterWithNewList(List<Alert> alertList) {

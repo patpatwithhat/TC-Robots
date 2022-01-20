@@ -25,7 +25,7 @@ import java.util.Objects;
 
 public class MonitoringScreenViewModel extends ViewModel implements TCPClient.OnMessageReceived {
     private static final String TAG = "MonitoringScreenViewModel";
-    private final MutableLiveData<List<Alert>> alertList = new MutableLiveData<>();
+    private final MutableLiveData<List<Alert>> alertList = new MutableLiveData<>(new ArrayList<>());
     //used to update btn_show_all if filter is active or not
     private final MutableLiveData<Boolean> isFilterActive = new MutableLiveData<>();
     private final ListViewFilter listViewFilter = new ListViewFilter();
@@ -35,7 +35,7 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     private Application application;
 
     public MonitoringScreenViewModel(Application application) {
-        uiTest();
+        //uiTest();
         this.application = application;
         initOnMessageReceivedListeners();
     }
@@ -61,13 +61,23 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     }
 
 
-    //TODO: Not called, when activityAddRobot closed
     private void initOnMessageReceivedListeners() {
         TCPClientSet.getInstance().getTcpClientList().forEach(client -> client.addOnMessageReceivedListener(this));
     }
 
     public void newIncomingTCPMsg(TCPMessage tcpMessage) {
-        Alert newAlert = new Alert(ErrorType.ERROR, tcpMessage.getErrorCode(), tcpMessage.getConfirmationText() + tcpMessage.getMetaInfo());
+        if (tcpMessage.getMetaInfo() == 0) {
+            Alert newAlert = new Alert(ErrorType.WARNING, tcpMessage.getErrorCode(), tcpMessage.getConfirmationText());
+            addAlert(newAlert);
+            return;
+        }
+        float val = (float) tcpMessage.getMetaInfo();
+        String metainfo = String.valueOf(val/100);
+        Alert newAlert = new Alert(ErrorType.WARNING, tcpMessage.getErrorCode(), tcpMessage.getConfirmationText() +metainfo);
+        if (tcpMessage.getConfirmationText().equals("temperatur")) {
+            newAlert.setErrorText("Temperatur im kritischen Bereich! " + metainfo + "°C");
+            newAlert.setErrorType(ErrorType.ERROR);
+        }
         addAlert(newAlert);
     }
 
@@ -84,6 +94,7 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     public LiveData<List<Alert>> getAlertList() {
         return alertList;
     }
+
     public void addAlert(Alert alert) {
         List<Alert> list = getAlertList().getValue();
         Objects.requireNonNull(list).add(alert);
@@ -117,7 +128,6 @@ public class MonitoringScreenViewModel extends ViewModel implements TCPClient.On
     public LiveData<Boolean> getIsFilterActive() {
         return isFilterActive;
     }
-
 
 
     @Override

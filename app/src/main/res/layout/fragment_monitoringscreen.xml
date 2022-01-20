@@ -13,7 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="70dp"
             android:weightSum="1">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -59,15 +58,6 @@
                 android:text="Infos"
                 android:textColor="@color/primaryTextColor" />
         </LinearLayout>
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:id="@+id/tv_status"
-            android:text="status"
-            android:layout_gravity="center"
-            android:textColor="@color/primaryTextColor"
-            android:textSize="@dimen/font_size" />
         <ListView
             android:id="@+id/listview_alerts"
             android:layout_width="match_parent"
